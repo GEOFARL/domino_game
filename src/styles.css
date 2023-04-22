@@ -1,0 +1,109 @@
+:root {
+  font-size: 62.5%;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #eee;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  padding: 3rem;
+  min-height: 100vh;
+}
+
+.heading-primary {
+  text-transform: uppercase;
+  font-size: 5rem;
+  text-align: center;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 80rem;
+  display: grid;
+  place-content: center;
+}
+
+table {
+  margin-top: 3rem;
+  border-collapse: collapse;
+}
+
+td {
+  --size: 5rem;
+  border: 1px solid black;
+  width: var(--size);
+  height: var(--size);
+  text-align: center;
+  font-size: 2rem;
+  transition: all 0.2s;
+}
+
+.number {
+  background-color: #fcd34d;
+  transition: all 0.2s;
+}
+
+.number:hover {
+  background-color: #f59e0b;
+}
+
+.domino {
+  background-color: #fb7185;
+  transition: all 0.2s;
+}
+
+.domino:hover {
+  background-color: #f43f5e;
+}
+
+td:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.btn {
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1.5rem 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10rem;
+  transition: all 0.2s;
+  position: relative;
+  font-size: 1.6rem;
+  border: none;
+  cursor: pointer;
+  background-color: #7dd3fc;
+  vertical-align: bottom;
+}
+
+.btn-group {
+  display: flex;
+  gap: 4rem;
+  max-width: 40rem;
+  margin: 3rem auto 0 auto;
+}
+
+.btn--alternative {
+  background-color: transparent;
+  border: 3px solid #7dd3fc;
+}
+
+.btn:hover {
+  transform: translateY(-0.3rem);
+  box-shadow: 0 1rem 2rem rgba(#000, 0.2);
+}
+
+.btn:active {
+  transform: translateY(-0.1rem);
+  box-shadow: 0 0.5rem 1rem rgba(#000, 0.2);
+}

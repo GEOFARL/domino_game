@@ -1,0 +1,22 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": ["airbnb-base", "prettier"],
+    "overrides": [
+    ],
+    "ignorePatterns": ["node_modules/", "build/", "dist/", "__tests__/", "webpack.config.js", "webpack**"],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-console": "off",
+        "no-loop-func": "off",
+        "no-param-reassign": "off",
+        "no-use-before-define": "off",
+        "no-restricted-syntax": "off",
+        "import/no-cycle": "off"
+    }
+}
