@@ -1,3 +1,6 @@
+import CellValue from './CellValue';
+import Domino from './Domino';
+
 export default class UI {
   constructor(board) {
     this.board = board;
@@ -14,9 +17,12 @@ export default class UI {
   displayBoard() {
     for (let i = 0; i < this.board.size; i += 1) {
       for (let j = 0; j < this.board.size; j += 1) {
-        if (this.board.board[i][j] !== 0) {
+        if (this.board.board[i][j] instanceof CellValue) {
           this.domGrid[i][j].innerText = this.board.board[i][j].value;
           this.domGrid[i][j].classList.add('number');
+        } else if (this.board.board[i][j] instanceof Domino) {
+          this.domGrid[i][j].innerText = this.board.board[i][j].getValue(i, j);
+          this.domGrid[i][j].classList.add('domino');
         } else {
           this.domGrid[i][j].innerText = '';
         }
