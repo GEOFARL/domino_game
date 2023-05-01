@@ -3,7 +3,7 @@
   --select-border: #777;
   --select-focus: blue;
   --select-arrow: var(--select-border);
-  --cell-size: 5rem;
+  --cell-size: 4.5rem;
 }
 
 .hide {
@@ -52,9 +52,9 @@
     rgba(255, 228, 230, 1) 77%
   );
   border-radius: 1.5rem;
-  width: 55rem;
-  height: 55rem;
-  padding: 3rem;
+  width: 48rem;
+  height: 48rem;
+  padding: 2rem;
   animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
@@ -65,15 +65,15 @@
 }
 
 .modal__header h2 {
-  font-size: 3.5rem;
+  font-size: 2.9rem;
   color: #4c0519;
   text-transform: uppercase;
 }
 
 .modal__header svg {
   cursor: pointer;
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 4rem;
   fill: #fb7185;
   transition: all 0.2s;
 }
@@ -92,7 +92,7 @@
 /**/
 
 label {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 500;
 }
 
@@ -130,7 +130,7 @@ select::-ms-expand {
   border-radius: 0.25em;
   padding: 0.25em 0.5em;
 
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   cursor: pointer;
   line-height: 1.1;
 
@@ -139,8 +139,8 @@ select::-ms-expand {
 }
 
 .board-select {
-  width: 70%;
-  margin: 3rem auto 2rem auto;
+  width: 50%;
+  margin: 2rem auto 2rem auto;
 }
 
 select,
@@ -202,14 +202,15 @@ body {
   background-color: #eee;
   font-family: 'Poppins', sans-serif;
   font-size: 1.6rem;
-  padding: 3rem;
+  padding: 2rem;
   min-height: 100vh;
 }
 
 .heading-primary {
   text-transform: uppercase;
-  font-size: 5rem;
+  font-size: 4rem;
   text-align: center;
+  margin-bottom: -2rem;
 }
 
 .content {
@@ -220,8 +221,10 @@ body {
 }
 
 table {
-  margin-top: 3rem;
+  margin: 1rem auto 0 auto;
   border-collapse: collapse;
+  min-height: calc((var(--cell-size) + 1px) * 9);
+  max-width: calc((var(--cell-size) + 1px) * 9);
 }
 
 td {
@@ -229,7 +232,7 @@ td {
   width: var(--cell-size);
   height: var(--cell-size);
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.8rem;
   transition: all 0.2s;
 }
 
@@ -260,14 +263,14 @@ td:hover {
 .btn {
   text-transform: uppercase;
   text-decoration: none;
-  padding: 1.5rem 4rem;
+  padding: 1.2rem 3.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 10rem;
   transition: all 0.2s;
   position: relative;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   border: none;
   cursor: pointer;
   background-color: #7dd3fc;
@@ -277,6 +280,7 @@ td:hover {
 .btn-group {
   display: flex;
   gap: 4rem;
+  justify-content: space-between;
   max-width: 40rem;
   margin: 3rem auto 0 auto;
 }

@@ -5,6 +5,8 @@ import initialBoards from './initialBoards';
 import UI from './UI';
 import CellValue from './CellValue';
 import DominoGrid from './DominoGrid';
+import copyDominoGrid from './copyFunc';
+import Domino from './Domino';
 
 const addOption = (index) => {
   const option = document.createElement('option');
@@ -13,14 +15,16 @@ const addOption = (index) => {
   boardSelectEl.appendChild(option);
 };
 
-const convertToSimple = (boards) => {
+export const convertToSimple = (boards) => {
   const simpleBoards = [];
   boards.forEach((board) => {
     const justBoard = board.board;
     for (let r = 0; r < board.size; r += 1) {
       for (let c = 0; c < board.size; c += 1) {
-        if (typeof board.board[r][c] === 'object') {
+        if (board.board[r][c] instanceof CellValue) {
           justBoard[r][c] = board.board[r][c].value;
+        } else if (board.board[r][c] instanceof Domino) {
+          justBoard[r][c] = board.board[r][c].getValue(r, c);
         }
       }
     }
@@ -29,7 +33,7 @@ const convertToSimple = (boards) => {
   return simpleBoards;
 };
 
-const convertOutOfSimple = (boards) => {
+export const convertOutOfSimple = (boards) => {
   const newBoards = [];
   boards.forEach((board) => {
     const newBoard = board;
@@ -142,13 +146,18 @@ boardSelectEl.addEventListener('change', (e) => {
 
 solveBtn.addEventListener('click', () => {
   setTimeout(() => {
-    const solutions = currentBoard.findAllSolutions();
+    const solutions = copyDominoGrid(currentBoard).findAllSolutions();
     console.log(solutions);
 
     try {
       [ui.board] = solutions;
       ui.displayBoard();
+      if (window.dominoAPI) {
+        console.log('here');
+        window.dominoAPI.saveSolution(...convertToSimple(solutions));
+      }
     } catch (err) {
+      console.log(err);
       overlay.classList.remove('hide');
       modal.classList.remove('hide');
     }
