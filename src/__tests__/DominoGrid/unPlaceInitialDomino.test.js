@@ -20,7 +20,7 @@ describe('DominoGrid', () => {
       domino1.tipCol = 0;
 
       dominoGrid.placeDomino(domino1);
-      DominoGrid.unPlaceDomino(domino1, dominoGrid);
+      dominoGrid.unPlaceDomino(domino1);
 
       expect(dominoGrid.board[0][0]).toBe(0);
       expect(dominoGrid.board[1][0]).toBe(0);
@@ -31,7 +31,7 @@ describe('DominoGrid', () => {
       domino2.tipCol = 3;
 
       dominoGrid.placeDomino(domino2);
-      DominoGrid.unPlaceDomino(domino2, dominoGrid);
+      dominoGrid.unPlaceDomino(domino2);
 
       expect(dominoGrid.board[3][3]).toBe(0);
       expect(dominoGrid.board[3][2]).toBe(0);

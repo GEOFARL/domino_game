@@ -52,7 +52,7 @@ export default class DominoGrid {
     }
   }
 
-  placeDomino(domino, dominoGrid = this) {
+  placeDomino(domino) {
     const r1 = domino.tipRow;
     const c1 = domino.tipCol;
 
@@ -60,11 +60,11 @@ export default class DominoGrid {
     const r2 = r1 + offR;
     const c2 = c1 + offC;
 
-    dominoGrid.board[r1][c1] = domino;
-    dominoGrid.board[r2][c2] = domino;
+    this.board[r1][c1] = domino;
+    this.board[r2][c2] = domino;
   }
 
-  static unPlaceDomino(domino, dominoGrid) {
+  unPlaceDomino(domino) {
     const r1 = domino.tipRow;
     const c1 = domino.tipCol;
 
@@ -72,17 +72,14 @@ export default class DominoGrid {
     const r2 = r1 + offR;
     const c2 = c1 + offC;
 
-    dominoGrid.board[r1][c1] = 0;
-    dominoGrid.board[r2][c2] = 0;
+    this.board[r1][c1] = 0;
+    this.board[r2][c2] = 0;
   }
 
-  isSameInRow(value, row, dominoGrid = this) {
-    for (let col = 0; col < dominoGrid.size; col += 1) {
-      if (
-        dominoGrid.isOnBoard(row, col) &&
-        dominoGrid.board[row][col] instanceof Domino
-      ) {
-        if (dominoGrid.board[row][col].getValue(row, col) === value) {
+  isSameInRow(value, row) {
+    for (let col = 0; col < this.size; col += 1) {
+      if (this.isOnBoard(row, col) && this.board[row][col] instanceof Domino) {
+        if (this.board[row][col].getValue(row, col) === value) {
           return true;
         }
       }
@@ -90,13 +87,10 @@ export default class DominoGrid {
     return false;
   }
 
-  isSameInCol(value, col, dominoGrid = this) {
-    for (let row = 0; row < dominoGrid.size; row += 1) {
-      if (
-        dominoGrid.isOnBoard(row, col) &&
-        dominoGrid.board[row][col] instanceof Domino
-      ) {
-        if (dominoGrid.board[row][col].getValue(row, col) === value) {
+  isSameInCol(value, col) {
+    for (let row = 0; row < this.size; row += 1) {
+      if (this.isOnBoard(row, col) && this.board[row][col] instanceof Domino) {
+        if (this.board[row][col].getValue(row, col) === value) {
           return true;
         }
       }
@@ -104,73 +98,71 @@ export default class DominoGrid {
     return false;
   }
 
-  isOnBoard(row, col, board = this.board) {
-    const rows = board.length;
-    const cols = board[0].length;
+  isOnBoard(row, col) {
+    const rows = this.board.length;
+    const cols = this.board[0].length;
     return row >= 0 && row < rows && col >= 0 && col < cols;
   }
 
-  isPositionFree(row, col, board = this.board) {
-    if (!this.isOnBoard(row, col, board)) {
+  isPositionFree(row, col) {
+    if (!this.isOnBoard(row, col)) {
       return false;
     }
-    return board[row][col] === 0;
+    return this.board[row][col] === 0;
   }
 
-  findDirections(row, col, dominoGrid = this) {
+  findDirections(row, col) {
     const directions = [];
-    if (dominoGrid.isPositionFree(row - 1, col, dominoGrid.board)) {
+    if (this.isPositionFree(row - 1, col)) {
       // North
       directions.push(0);
     }
 
     // East
-    if (dominoGrid.isPositionFree(row, col + 1, dominoGrid.board)) {
+    if (this.isPositionFree(row, col + 1)) {
       directions.push(1);
     }
 
     // South
-    if (dominoGrid.isPositionFree(row + 1, col, dominoGrid.board)) {
+    if (this.isPositionFree(row + 1, col)) {
       directions.push(2);
     }
 
     // West
-    if (dominoGrid.isPositionFree(row, col - 1, dominoGrid.board)) {
+    if (this.isPositionFree(row, col - 1)) {
       directions.push(3);
     }
 
     return directions;
   }
 
-  findAvailablePosition(dominoGrid = this) {
-    if (
-      dominoGrid.cellValues.length !== 0 &&
-      dominoGrid.cellValues.find((cell) => !cell.done)
-    ) {
-      const cellValue = dominoGrid.cellValues.find((cell) => !cell.done);
+  findAvailablePosition() {
+    const undoneCell = this.cellValues.find((cell) => !cell.done);
+    if (this.cellValues.length !== 0 && undoneCell) {
+      const cellValue = undoneCell;
       const emptyCells = cellValue.findEmptyAdjCells();
       for (const [r, c] of emptyCells) {
-        const directions = this.findDirections(r, c, dominoGrid);
+        const directions = this.findDirections(r, c);
         if (directions.length !== 0) {
           return [[r, c], directions];
         }
 
         // Mark that we can not place a domino in this cell
-        // dominoGrid.board[r][c] = false;
+        // this.board[r][c] = false;
       }
       return null;
     }
 
     for (let i = 0; i < this.size; i += 1) {
       for (let j = 0; j < this.size; j += 1) {
-        if (dominoGrid.isPositionFree(i, j, dominoGrid.board)) {
-          const directions = this.findDirections(i, j, dominoGrid);
+        if (this.isPositionFree(i, j)) {
+          const directions = this.findDirections(i, j);
           if (directions.length !== 0) {
             return [[i, j], directions];
           }
 
           // Mark that we can not place a domino in this cell
-          // dominoGrid.board[i][j] = false;
+          // this.board[i][j] = false;
         }
       }
     }
@@ -210,15 +202,15 @@ export default class DominoGrid {
     return false;
   }
 
-  static removeDomino(dominoToRemove, dominoGrid) {
-    return dominoGrid.availableDominos.filter(
+  removeDomino(dominoToRemove) {
+    return this.availableDominos.filter(
       (domino) => !Domino.areTheSame(domino, dominoToRemove)
     );
   }
 
-  static markFinishedCells(dominoGrid) {
+  markFinishedCells() {
     const finishedCells = [];
-    dominoGrid.cellValues.forEach((value) => {
+    this.cellValues.forEach((value) => {
       if (!value.done) {
         if (value.isSolved()) {
           value.done = true;
@@ -230,16 +222,6 @@ export default class DominoGrid {
     return finishedCells;
   }
 
-  static findUnFinishedCells(dominoGrid) {
-    const unfinishedCells = [];
-    dominoGrid.cellValues.forEach((value) => {
-      if (!value.done) {
-        unfinishedCells.push(value);
-      }
-    });
-    return unfinishedCells;
-  }
-
   static unMarkFinishedCells(finishedCells) {
     finishedCells.forEach((cell) => {
       cell.unMarkCells();
@@ -247,33 +229,37 @@ export default class DominoGrid {
     });
   }
 
-  static returnInitialDomino(initialDomino, place, dominoGrid) {
-    dominoGrid.availableDominos.splice(place, 0, initialDomino);
+  findUnFinishedCells() {
+    const unfinishedCells = [];
+    this.cellValues.forEach((value) => {
+      if (!value.done) {
+        unfinishedCells.push(value);
+      }
+    });
+    return unfinishedCells;
   }
 
-  validate(pos, direction, domino, dominoGrid = this) {
+  returnInitialDomino(initialDomino, place) {
+    this.availableDominos.splice(place, 0, initialDomino);
+  }
+
+  validate(pos, direction, domino) {
     const [r1, c1] = pos;
     const [rOff, cOff] = DominoGrid.offsets[direction];
     const r2 = r1 + rOff;
     const c2 = c1 + cOff;
 
-    if (!dominoGrid.isOnBoard(r2, c2)) {
+    if (!this.isOnBoard(r2, c2)) {
       return false;
     }
-    if (
-      dominoGrid.isSameInRow(domino.a, r1) ||
-      dominoGrid.isSameInCol(domino.a, c1)
-    ) {
+    if (this.isSameInRow(domino.a, r1) || this.isSameInCol(domino.a, c1)) {
       return false;
     }
-    if (
-      dominoGrid.isSameInRow(domino.b, r2) ||
-      dominoGrid.isSameInCol(domino.b, c2)
-    ) {
+    if (this.isSameInRow(domino.b, r2) || this.isSameInCol(domino.b, c2)) {
       return false;
     }
 
-    if (dominoGrid.isAdjDomino([r1, c1], direction)) {
+    if (this.isAdjDomino([r1, c1], direction)) {
       return false;
     }
 
@@ -284,10 +270,10 @@ export default class DominoGrid {
     const result = [];
 
     const solve = (dominoGrid) => {
-      console.log(copyDominoGrid(dominoGrid));
-      console.log(`Dominos length: ${dominoGrid.availableDominos.length}`);
+      // console.log(copyDominoGrid(dominoGrid));
+      // console.log(`Dominos length: ${dominoGrid.availableDominos.length}`);
 
-      const val = this.findAvailablePosition(dominoGrid);
+      const val = dominoGrid.findAvailablePosition();
       let currPos;
       let directions;
       if (val) {
@@ -307,26 +293,17 @@ export default class DominoGrid {
           console.log(`in for loop, i: ${i}`);
 
           for (const direction of directions) {
-            const isValid = dominoGrid.validate(
-              currPos,
-              direction,
-              currDomino,
-              dominoGrid
-            );
+            const isValid = dominoGrid.validate(currPos, direction, currDomino);
 
             if (isValid) {
               Domino.setupDomino(currDomino, currPos, direction);
-              dominoGrid.placeDomino(currDomino, dominoGrid);
-              dominoGrid.availableDominos = DominoGrid.removeDomino(
-                currDomino,
-                dominoGrid
-              );
-              const unFinishedCells =
-                DominoGrid.findUnFinishedCells(dominoGrid);
+              dominoGrid.placeDomino(currDomino);
+              dominoGrid.availableDominos = dominoGrid.removeDomino(currDomino);
+              const unFinishedCells = dominoGrid.findUnFinishedCells();
               let finishedCells;
 
               if (unFinishedCells && unFinishedCells.length > 0) {
-                finishedCells = DominoGrid.markFinishedCells(dominoGrid);
+                finishedCells = dominoGrid.markFinishedCells();
                 const cellValue = dominoGrid.cellValues.find(
                   (cell) => !cell.done
                 );
@@ -335,7 +312,6 @@ export default class DominoGrid {
                   console.log('finished');
                   result.push(dominoGrid);
                   console.log(dominoGrid);
-                  // throw new Error('solved');
                   return true;
                 }
 
@@ -343,12 +319,8 @@ export default class DominoGrid {
                   if (finishedCells && finishedCells.length > 0) {
                     DominoGrid.unMarkFinishedCells(finishedCells);
                   }
-                  DominoGrid.returnInitialDomino(
-                    currInitialDomino,
-                    i,
-                    dominoGrid
-                  );
-                  DominoGrid.unPlaceDomino(currDomino, dominoGrid);
+                  dominoGrid.returnInitialDomino(currInitialDomino, i);
+                  dominoGrid.unPlaceDomino(currDomino);
                   console.log('continue');
                   continue;
                 }
@@ -365,34 +337,25 @@ export default class DominoGrid {
               if (finishedCells && finishedCells.length > 0) {
                 DominoGrid.unMarkFinishedCells(finishedCells);
               }
-              DominoGrid.returnInitialDomino(currInitialDomino, i, dominoGrid);
-              DominoGrid.unPlaceDomino(currDomino, dominoGrid);
+              dominoGrid.returnInitialDomino(currInitialDomino, i);
+              dominoGrid.unPlaceDomino(currDomino);
             }
           }
 
           Domino.rotateDomino(currDomino);
 
           for (const direction of directions) {
-            const isValid = dominoGrid.validate(
-              currPos,
-              direction,
-              currDomino,
-              dominoGrid
-            );
+            const isValid = dominoGrid.validate(currPos, direction, currDomino);
 
             if (isValid) {
               Domino.setupDomino(currDomino, currPos, direction);
-              dominoGrid.placeDomino(currDomino, dominoGrid);
-              dominoGrid.availableDominos = DominoGrid.removeDomino(
-                currDomino,
-                dominoGrid
-              );
-              const unFinishedCells =
-                DominoGrid.findUnFinishedCells(dominoGrid);
+              dominoGrid.placeDomino(currDomino);
+              dominoGrid.availableDominos = dominoGrid.removeDomino(currDomino);
+              const unFinishedCells = dominoGrid.findUnFinishedCells();
               let finishedCells;
 
               if (unFinishedCells && unFinishedCells.length > 0) {
-                finishedCells = DominoGrid.markFinishedCells(dominoGrid);
+                finishedCells = dominoGrid.markFinishedCells();
                 const cellValue = dominoGrid.cellValues.find(
                   (cell) => !cell.done
                 );
@@ -409,12 +372,8 @@ export default class DominoGrid {
                   if (finishedCells && finishedCells.length > 0) {
                     DominoGrid.unMarkFinishedCells(finishedCells);
                   }
-                  DominoGrid.returnInitialDomino(
-                    currInitialDomino,
-                    i,
-                    dominoGrid
-                  );
-                  DominoGrid.unPlaceDomino(currDomino, dominoGrid);
+                  dominoGrid.returnInitialDomino(currInitialDomino, i);
+                  dominoGrid.unPlaceDomino(currDomino);
                   console.log('continue');
                   continue;
                 }
@@ -431,14 +390,14 @@ export default class DominoGrid {
               if (finishedCells && finishedCells.length > 0) {
                 DominoGrid.unMarkFinishedCells(finishedCells);
               }
-              DominoGrid.returnInitialDomino(currInitialDomino, i, dominoGrid);
-              DominoGrid.unPlaceDomino(currDomino, dominoGrid);
+              dominoGrid.returnInitialDomino(currInitialDomino, i);
+              dominoGrid.unPlaceDomino(currDomino);
             }
           }
         }
         const [r, c] = currPos;
         dominoGrid.board[r][c] = false;
-        const a = this.findAvailablePosition(dominoGrid);
+        const a = dominoGrid.findAvailablePosition();
         if (a) {
           [currPos, directions] = a;
         } else {

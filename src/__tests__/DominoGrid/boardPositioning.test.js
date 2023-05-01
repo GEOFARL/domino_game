@@ -35,12 +35,6 @@ describe('DominoGrid', () => {
   });
 
   describe('isPositionFree', () => {
-    let dominoGrid;
-
-    beforeEach(() => {
-      dominoGrid = new DominoGrid();
-    });
-
     test('should return true if the position is within the board boundaries and is not occupied with any number except 0', () => {
       const row = 0;
       const col = 0;
@@ -48,7 +42,8 @@ describe('DominoGrid', () => {
         [0, 0],
         [0, 0],
       ];
-      expect(dominoGrid.isPositionFree(row, col, board)).toBe(true);
+      const dominoGrid = new DominoGrid(2, board);
+      expect(dominoGrid.isPositionFree(row, col)).toBe(true);
     });
 
     test('should return false if the position is within the board boundaries and is occupied with a number other than 0', () => {
@@ -58,7 +53,8 @@ describe('DominoGrid', () => {
         [1, 0],
         [0, 0],
       ];
-      expect(dominoGrid.isPositionFree(row, col, board)).toBe(false);
+      const dominoGrid = new DominoGrid(2, board);
+      expect(dominoGrid.isPositionFree(row, col)).toBe(false);
     });
 
     test('should return false if the position is within the board boundaries and is occupied with a domino object', () => {
@@ -68,7 +64,8 @@ describe('DominoGrid', () => {
         [new Domino(1, 2), 0],
         [0, 0],
       ];
-      expect(dominoGrid.isPositionFree(row, col, board)).toBe(false);
+      const dominoGrid = new DominoGrid(2, board);
+      expect(dominoGrid.isPositionFree(row, col)).toBe(false);
     });
 
     test('should return false if the position is outside the board boundaries', () => {
@@ -78,7 +75,8 @@ describe('DominoGrid', () => {
         [0, 0],
         [0, 0],
       ];
-      expect(dominoGrid.isPositionFree(row, col, board)).toBe(false);
+      const dominoGrid = new DominoGrid(2, board);
+      expect(dominoGrid.isPositionFree(row, col)).toBe(false);
     });
   });
 });
