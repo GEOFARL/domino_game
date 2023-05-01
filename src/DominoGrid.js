@@ -222,6 +222,7 @@ export default class DominoGrid {
       if (!value.done) {
         if (value.isSolved()) {
           value.done = true;
+          value.markCells();
           finishedCells.push(value);
         }
       }
@@ -241,6 +242,7 @@ export default class DominoGrid {
 
   static unMarkFinishedCells(finishedCells) {
     finishedCells.forEach((cell) => {
+      cell.unMarkCells();
       cell.done = false;
     });
   }
@@ -323,7 +325,7 @@ export default class DominoGrid {
                 DominoGrid.findUnFinishedCells(dominoGrid);
               let finishedCells;
 
-              if (unFinishedCells.length > 0) {
+              if (unFinishedCells && unFinishedCells.length > 0) {
                 finishedCells = DominoGrid.markFinishedCells(dominoGrid);
                 const cellValue = dominoGrid.cellValues.find(
                   (cell) => !cell.done
@@ -337,8 +339,8 @@ export default class DominoGrid {
                   return true;
                 }
 
-                if (!cellValue.checkValidity()) {
-                  if (finishedCells.length > 0) {
+                if (cellValue && !cellValue.checkValidity()) {
+                  if (finishedCells && finishedCells.length > 0) {
                     DominoGrid.unMarkFinishedCells(finishedCells);
                   }
                   DominoGrid.returnInitialDomino(
@@ -360,7 +362,7 @@ export default class DominoGrid {
               if (solve(copyDominoGrid(dominoGrid))) {
                 return true;
               }
-              if (finishedCells.length > 0) {
+              if (finishedCells && finishedCells.length > 0) {
                 DominoGrid.unMarkFinishedCells(finishedCells);
               }
               DominoGrid.returnInitialDomino(currInitialDomino, i, dominoGrid);
@@ -389,7 +391,7 @@ export default class DominoGrid {
                 DominoGrid.findUnFinishedCells(dominoGrid);
               let finishedCells;
 
-              if (unFinishedCells.length > 0) {
+              if (unFinishedCells && unFinishedCells.length > 0) {
                 finishedCells = DominoGrid.markFinishedCells(dominoGrid);
                 const cellValue = dominoGrid.cellValues.find(
                   (cell) => !cell.done
@@ -403,8 +405,8 @@ export default class DominoGrid {
                   return true;
                 }
 
-                if (!cellValue.checkValidity()) {
-                  if (finishedCells.length > 0) {
+                if (cellValue && !cellValue.checkValidity()) {
+                  if (finishedCells && finishedCells.length > 0) {
                     DominoGrid.unMarkFinishedCells(finishedCells);
                   }
                   DominoGrid.returnInitialDomino(
@@ -426,7 +428,7 @@ export default class DominoGrid {
               if (solve(copyDominoGrid(dominoGrid))) {
                 return true;
               }
-              if (finishedCells.length > 0) {
+              if (finishedCells && finishedCells.length > 0) {
                 DominoGrid.unMarkFinishedCells(finishedCells);
               }
               DominoGrid.returnInitialDomino(currInitialDomino, i, dominoGrid);
@@ -445,50 +447,6 @@ export default class DominoGrid {
       }
       return false;
     };
-
-    // function handleDirection(currPos, direction, currDomino, dominoGrid) {
-    //   const isValid = dominoGrid.validate(
-    //     currPos,
-    //     direction,
-    //     currDomino,
-    //     dominoGrid
-    //   );
-    //   if (isValid) {
-    //     Domino.setupDomino(currDomino, currPos, direction);
-    //     dominoGrid.placeDomino(currDomino, dominoGrid);
-    //     dominoGrid.availableDominos = DominoGrid.removeDomino(
-    //       currDomino,
-    //       dominoGrid
-    //     );
-
-    //     if (dominoGrid.cellValues.length > 0) {
-    //       DominoGrid.markFinishedCells(dominoGrid);
-    //       const cellValue = dominoGrid.cellValues.find((cell) => !cell.done);
-
-    //       if (dominoGrid.availableDominos.length === 0 && !cellValue) {
-    //         console.log('finished');
-    //         // result.push(dominoGrid);
-    //         console.log(dominoGrid);
-    //         // throw new Error('solved');
-    //         return true;
-    //       }
-
-    //       if (!cellValue) {
-    //         return false;
-    //       }
-
-    //       if (!cellValue.checkValidity()) {
-    //         return false;
-    //       }
-    //     } else if (dominoGrid.availableDominos.length === 0) {
-    //       console.log('finished');
-    //       console.log(dominoGrid);
-    //       return true;
-    //     }
-    //     console.log('recursive call');
-    //     solve(copyDominoGrid(dominoGrid));
-    //   }
-    // }
     solve(copyDominoGrid(this));
 
     return result;

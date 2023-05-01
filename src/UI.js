@@ -1,5 +1,6 @@
 import CellValue from './CellValue';
 import Domino from './Domino';
+import DominoGrid from './DominoGrid';
 
 export default class UI {
   constructor(board) {
@@ -12,6 +13,15 @@ export default class UI {
     }
 
     this.displayBoard();
+  }
+
+  clearBoard() {
+    for (let i = 0; i < this.board.size; i += 1) {
+      for (let j = 0; j < this.board.size; j += 1) {
+        this.domGrid[i][j].innerText = '';
+        this.domGrid[i][j].className = '';
+      }
+    }
   }
 
   displayBoard() {
@@ -28,5 +38,52 @@ export default class UI {
         }
       }
     }
+  }
+
+  addNewBoard() {
+    for (let i = 0; i < this.board.size; i += 1) {
+      for (let j = 0; j < this.board.size; j += 1) {
+        this.domGrid[i][j].innerHTML = `<input type="text" maxlength="2" />`;
+        this.domGrid[i][j]
+          .querySelector('input')
+          .addEventListener('blur', (e) => {
+            const enteredValue = e.target.value.trim();
+            if (
+              enteredValue.length > 0 &&
+              +enteredValue > 0 &&
+              +enteredValue < 23
+            ) {
+              e.target.classList.add('number');
+            } else {
+              e.target.value = '';
+              e.target.classList = '';
+            }
+          });
+      }
+    }
+  }
+
+  getNewBoard() {
+    const board = [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ];
+
+    for (let i = 0; i < this.board.size; i += 1) {
+      for (let j = 0; j < this.board.size; j += 1) {
+        const { value } = this.domGrid[i][j].querySelector('input');
+        if (value.length !== 0) {
+          board[i][j] = new CellValue(+value, i, j);
+        }
+      }
+    }
+    return new DominoGrid(9, board);
   }
 }

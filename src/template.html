@@ -15,8 +15,38 @@
     />
   </head>
   <body>
+    <div class="overlay hide"></div>
+    <div class="modal hide">
+      <div class="modal__content">
+        <header class="modal__header">
+          <h2>Error</h2>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path
+              d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm79 143c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"
+            />
+          </svg>
+        </header>
+        <main class="modal__main">
+          <p>
+            Unable to solve this board positioning!<br />Try to enter another
+            board
+          </p>
+        </main>
+        <footer class="modal__footer"></footer>
+      </div>
+    </div>
     <div class="content">
       <h1 class="heading-primary">Domino Game</h1>
+      <div class="btn-group">
+        <button class="btn btn--red hide" id="add-board">Add new board</button>
+        <button
+          class="btn btn--red btn--red-alternate hide"
+          id="add-board-exit"
+        >
+          Exit
+        </button>
+      </div>
       <table>
         <tr>
           <td></td>
@@ -118,9 +148,24 @@
           <td></td>
         </tr>
       </table>
-      <div class="btn-group">
-        <div class="btn" id="generate">Generate</div>
-        <div class="btn btn--alternative" id="solve">Solve</div>
+      <section class="first-section">
+        <div class="btn-group">
+          <button class="btn" id="generate">Generate</button>
+          <button class="btn btn--alternative" id="solve">Solve</button>
+        </div>
+        <div class="board-select">
+          <label for="standard-select">Select which board to solve</label>
+          <div class="select">
+            <select id="standard-select"></select>
+            <span class="focus"></span>
+          </div>
+        </div>
+      </section>
+      <div class="btn-group btn-group--wide">
+        <button class="btn btn--alternative" id="add-new-board">
+          Enter new board
+        </button>
+        <button class="btn" id="remove-current-board">Remove this board</button>
       </div>
     </div>
   </body>

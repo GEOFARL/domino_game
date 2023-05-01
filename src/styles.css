@@ -1,6 +1,194 @@
 :root {
   font-size: 62.5%;
+  --select-border: #777;
+  --select-focus: blue;
+  --select-arrow: var(--select-border);
+  --cell-size: 5rem;
 }
+
+.hide {
+  display: none !important;
+}
+
+.error {
+  border: 1px solid red;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+.modal {
+  z-index: 11;
+  display: grid;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  place-content: center;
+}
+
+.modal__content {
+  background: rgb(255, 228, 230);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 228, 230, 1) 10%,
+    rgba(255, 228, 230, 1) 77%
+  );
+  border-radius: 1.5rem;
+  width: 55rem;
+  height: 55rem;
+  padding: 3rem;
+  animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal__header h2 {
+  font-size: 3.5rem;
+  color: #4c0519;
+  text-transform: uppercase;
+}
+
+.modal__header svg {
+  cursor: pointer;
+  width: 5rem;
+  height: 5rem;
+  fill: #fb7185;
+  transition: all 0.2s;
+}
+
+.modal__header svg:hover {
+  fill: #f43f5e;
+}
+
+.modal__main {
+  min-height: 60%;
+}
+
+.modal__main p {
+  margin: 1.5rem 0;
+}
+/**/
+
+label {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+select {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  z-index: 1;
+
+  /* Remove focus outline, will add on alternate element */
+  outline: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.select {
+  display: grid;
+  grid-template-areas: 'select';
+  align-items: center;
+  position: relative;
+
+  min-width: 15ch;
+  max-width: 30ch;
+
+  border: 1px solid var(--select-border);
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1.1;
+
+  background-color: #fff;
+  background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+}
+
+.board-select {
+  width: 70%;
+  margin: 3rem auto 2rem auto;
+}
+
+select,
+.select::after {
+  grid-area: select;
+}
+
+.select:not(.select--multiple)::after {
+  content: '';
+  justify-self: end;
+  width: 0.8em;
+  height: 0.5em;
+  background-color: var(--select-arrow);
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+}
+
+select:focus + .focus {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border: 2px solid var(--select-focus);
+  border-radius: inherit;
+}
+
+select[multiple] {
+  padding-right: 0;
+  height: 6rem;
+}
+
+select:not(:disabled) option {
+  border-radius: 12px;
+  transition: 120ms all ease-in;
+}
+
+select:checked {
+  background: linear-gradient(hsl(242, 61%, 76%), hsl(242, 61%, 71%));
+  padding-left: 0.5em;
+  color: black !important;
+}
+
+select option {
+  white-space: normal;
+  outline-color: var(--select-focus);
+}
+
+/**/
 
 *,
 *::after,
@@ -37,10 +225,9 @@ table {
 }
 
 td {
-  --size: 5rem;
   border: 1px solid black;
-  width: var(--size);
-  height: var(--size);
+  width: var(--cell-size);
+  height: var(--cell-size);
   text-align: center;
   font-size: 2rem;
   transition: all 0.2s;
@@ -57,7 +244,8 @@ td {
 
 .domino {
   background-color: #fb7185;
-  transition: all 0.2s;
+  transition: all 0.4s;
+  animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
 .domino:hover {
@@ -93,17 +281,47 @@ td:hover {
   margin: 3rem auto 0 auto;
 }
 
+.btn-group--wide {
+  max-width: 55rem;
+}
+
 .btn--alternative {
   background-color: transparent;
   border: 3px solid #7dd3fc;
 }
 
+.btn--red {
+  background-color: #fb7185;
+  /* width: 80%;
+  margin: 0 auto; */
+}
+
+.btn--red-alternate {
+  background-color: transparent;
+  border: 3px solid #fb7185;
+}
+
 .btn:hover {
   transform: translateY(-0.3rem);
-  box-shadow: 0 1rem 2rem rgba(#000, 0.2);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
 }
 
 .btn:active {
   transform: translateY(-0.1rem);
-  box-shadow: 0 0.5rem 1rem rgba(#000, 0.2);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+td input {
+  font: inherit;
+  font-weight: 600;
+  background-color: #eee;
+  appearance: none;
+  border: none;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  text-align: center;
+}
+
+td input:focus {
+  outline: none;
 }

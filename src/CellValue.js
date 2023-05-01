@@ -78,4 +78,23 @@ export default class CellValue {
       }
     }
   }
+
+  unMarkCells() {
+    const startRow = this.row - 1;
+    const startCol = this.col - 1;
+
+    for (let r = startRow; r < startRow + 3; r += 1) {
+      for (let c = startCol; c < startCol + 3; c += 1) {
+        if (
+          this.dominoGrid.isOnBoard(r, c, this.dominoGrid.board) &&
+          !(
+            this.dominoGrid.board[r][c] instanceof Domino ||
+            this.dominoGrid.board[r][c] instanceof CellValue
+          )
+        ) {
+          this.dominoGrid.board[r][c] = 0;
+        }
+      }
+    }
+  }
 }
