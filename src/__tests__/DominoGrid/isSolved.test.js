@@ -25,7 +25,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[1][1];
 
-      const isSolved = cellValue.isSolved();
+      const isSolved = dominoGrid.isSolved(cellValue);
 
       expect(isSolved).toBeTruthy();
     });
@@ -51,7 +51,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[1][1];
 
-      const isSolved = cellValue.isSolved();
+      const isSolved = dominoGrid.isSolved(cellValue);
 
       expect(isSolved).toBeFalsy();
     });

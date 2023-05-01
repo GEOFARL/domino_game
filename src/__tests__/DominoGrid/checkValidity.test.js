@@ -25,7 +25,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[1][1];
 
-      const isValid = cellValue.checkValidity();
+      const isValid = dominoGrid.checkValidity(cellValue);
 
       expect(isValid).toBeTruthy();
     });
@@ -51,7 +51,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[1][1];
 
-      const isValid = cellValue.checkValidity();
+      const isValid = dominoGrid.checkValidity(cellValue);
 
       expect(isValid).toBeFalsy();
     });
@@ -78,7 +78,7 @@ describe('CellValue', () => {
     const dominoGrid = new DominoGrid(4, board);
     const cellValue = dominoGrid.board[0][3];
 
-    const isValid = cellValue.checkValidity();
+    const isValid = dominoGrid.checkValidity(cellValue);
 
     expect(isValid).toBeFalsy();
   });

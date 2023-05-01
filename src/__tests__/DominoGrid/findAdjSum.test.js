@@ -25,7 +25,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[1][1];
 
-      const sum = cellValue.findAdjSum();
+      const sum = dominoGrid.findAdjSum(cellValue);
 
       expect(sum).toBe(12);
     });
@@ -46,7 +46,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[0][0];
 
-      const sum = cellValue.findAdjSum();
+      const sum = dominoGrid.findAdjSum(cellValue);
 
       expect(sum).toBe(1);
     });
@@ -62,7 +62,7 @@ describe('CellValue', () => {
       const dominoGrid = new DominoGrid(4, board);
       const cellValue = dominoGrid.board[1][1];
 
-      const sum = cellValue.findAdjSum();
+      const sum = dominoGrid.findAdjSum(cellValue);
 
       expect(sum).toBe(0);
     });

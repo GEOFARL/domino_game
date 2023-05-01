@@ -65,7 +65,7 @@ describe('DominoGrid', () => {
     ];
     const dominoGrid = new DominoGrid(4, board);
 
-    const emptyCells = dominoGrid.cellValues[0].findEmptyAdjCells();
+    const emptyCells = dominoGrid.findEmptyAdjCells(dominoGrid.cellValues[0]);
     expect(emptyCells).toEqual([
       [2, 2],
       [3, 0],
