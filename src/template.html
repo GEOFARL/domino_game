@@ -39,7 +39,7 @@
     <div class="content">
       <h1 class="heading-primary">Domino Game</h1>
 
-      <div class="btn-group">
+      <div class="btn-group add-board">
         <button class="btn btn--red hide" id="add-board">Add new board</button>
         <button
           class="btn btn--red btn--red-alternate hide"
@@ -150,9 +150,10 @@
         </tr>
       </table>
       <section class="first-section">
-        <div class="btn-group">
+        <div class="btn-group margin-top">
           <button class="btn" id="generate">Generate</button>
-          <button class="btn btn--alternative" id="solve">Solve</button>
+          <button class="btn btn--alternative" id="solve-ai">Solve AI</button>
+          <button class="btn" id="solve-ai">Solve Yourself</button>
         </div>
         <div class="board-select">
           <label for="standard-select">Select which board to solve</label>
@@ -161,13 +162,16 @@
             <span class="focus"></span>
           </div>
         </div>
+        <div class="btn-group btn-group--wide">
+          <button class="btn btn--alternative" id="add-new-board">
+            Enter new board
+          </button>
+          <button class="btn" id="remove-current-board">
+            Remove this board
+          </button>
+        </div>
       </section>
-      <div class="btn-group btn-group--wide">
-        <button class="btn btn--alternative" id="add-new-board">
-          Enter new board
-        </button>
-        <button class="btn" id="remove-current-board">Remove this board</button>
-      </div>
+      <input id="themeSwitcher" class="ThemeToggle" type="checkbox" checked />
     </div>
   </body>
 </html>

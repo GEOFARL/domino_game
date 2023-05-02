@@ -7,6 +7,7 @@ import CellValue from './CellValue';
 import DominoGrid from './DominoGrid';
 import copyDominoGrid from './copyFunc';
 import Domino from './Domino';
+import './theme';
 
 const addOption = (index) => {
   const option = document.createElement('option');
@@ -67,11 +68,27 @@ const addBoardBtn = document.getElementById('add-board');
 const addBoardExit = document.getElementById('add-board-exit');
 const addNewBoardBtn = document.getElementById('add-new-board');
 const boardSelectEl = document.getElementById('standard-select');
-const solveBtn = document.getElementById('solve');
+const solveAIBtn = document.getElementById('solve-ai');
 const removeBoardBtn = document.getElementById('remove-current-board');
 const overlay = document.querySelector('.overlay');
 const modal = document.querySelector('.modal');
 const closeModalBtn = document.querySelector('.modal__header svg');
+const generateBtn = document.getElementById('generate');
+
+let generatedBoard = null;
+
+generateBtn.addEventListener('click', (e) => {
+  firstSection.classList.add('hide');
+  addBoardBtn.classList.remove('hide');
+  addBoardExit.classList.remove('hide');
+  e.target.classList.add('hide');
+  removeBoardBtn.classList.add('hide');
+
+  generatedBoard = new DominoGrid(9);
+  ui.board = generatedBoard;
+  ui.clearBoard();
+  ui.displayBoard();
+});
 
 closeModalBtn.addEventListener('click', () => {
   overlay.classList.add('hide');
@@ -84,6 +101,14 @@ addBoardExit.addEventListener('click', () => {
   firstSection.classList.remove('hide');
   addNewBoardBtn.classList.remove('hide');
   removeBoardBtn.classList.remove('hide');
+  generateBtn.classList.remove('hide');
+
+  if (generatedBoard) {
+    generatedBoard = null;
+    [ui.board] = boards;
+    ui.clearBoard();
+    ui.displayBoard();
+  }
 
   ui.clearBoard();
   ui.displayBoard();
@@ -91,7 +116,14 @@ addBoardExit.addEventListener('click', () => {
 
 addBoardBtn.addEventListener('click', () => {
   console.log(boards);
-  const newBoard = ui.getNewBoard();
+  let newBoard;
+  if (generatedBoard) {
+    generateBtn.classList.remove('hide');
+    newBoard = generatedBoard;
+    generatedBoard = null;
+  } else {
+    newBoard = ui.getNewBoard();
+  }
   boards.push(newBoard);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(convertToSimple(boards)));
   boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORAGE_KEY)));
@@ -144,7 +176,7 @@ boardSelectEl.addEventListener('change', (e) => {
   ui.displayBoard();
 });
 
-solveBtn.addEventListener('click', () => {
+solveAIBtn.addEventListener('click', () => {
   setTimeout(() => {
     const solutions = copyDominoGrid(currentBoard).findAllSolutions();
     console.log(solutions);

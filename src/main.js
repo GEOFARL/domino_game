@@ -9,8 +9,8 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: isDev ? 1000 : 700,
-    height: 840,
+    width: isDev ? 1250 : 950,
+    height: 670,
     icon: path.join(__dirname, 'assets', 'domino-icon.png'),
     resizable: isDev,
     webPreferences: {

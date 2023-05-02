@@ -5,10 +5,9 @@ import copyDominoGrid, { copyDomino } from './copyFunc';
 export default class DominoGrid {
   constructor(size, initialBoard = null) {
     this.size = size;
+    this.cellValues = [];
     if (initialBoard) {
       this.board = initialBoard;
-
-      this.cellValues = [];
       this.board.forEach((row) => {
         row.forEach((value) => {
           if (value instanceof CellValue) {
@@ -18,11 +17,33 @@ export default class DominoGrid {
         });
       });
     } else {
-      // Generate random board
+      this.generateBoard();
     }
 
     this.availableDominos = DominoGrid.generateDominoes();
     this.shuffleDominoes();
+  }
+
+  generateBoard() {
+    const INTENSITY = 20 + Math.floor(Math.random() * 26);
+    const MIN_VALUE = 1;
+    const MAX_VALUE = 23;
+
+    this.board = Array(this.size)
+      .fill(0)
+      .map(() => Array(this.size).fill(0));
+
+    for (let r = 0; r < this.size; r += 1) {
+      for (let c = 0; c < this.size; c += 1) {
+        if (Math.random() < INTENSITY / 100) {
+          const randomValue =
+            Math.floor(Math.random() * (MAX_VALUE - MIN_VALUE + 1)) + MIN_VALUE;
+          const newCellValue = new CellValue(randomValue, r, c);
+          this.cellValues.push(newCellValue);
+          this.board[r][c] = newCellValue;
+        }
+      }
+    }
   }
 
   static generateDominoes() {
@@ -345,11 +366,23 @@ export default class DominoGrid {
 
   findAllSolutions() {
     const result = [];
+    const TIME_OUT = 90;
+    const TIME_OUT_LIMIT = 10;
+    let timeOutCount = 0;
+    let startingTime = Date.now();
+    const initialBoard = copyDominoGrid(this);
 
     const solve = () => {
       // console.log(copyDominoGrid(dominoGrid));
       // console.log(`Dominos length: ${dominoGrid.availableDominos.length}`);
 
+      const currentTime = Date.now();
+      console.log(`Time passed: ${currentTime - startingTime}`);
+      if (currentTime - startingTime > TIME_OUT * 1000) {
+        timeOutCount += 1;
+        console.error(`Timeout #${timeOutCount + 1}`);
+        throw new Error('Timeout');
+      }
       const val = this.findAvailablePosition();
       let currPos;
       let directions;
@@ -485,7 +518,23 @@ export default class DominoGrid {
       });
       return false;
     };
-    solve();
+
+    while (result.length === 0) {
+      try {
+        console.warn(this.availableDominos);
+        solve();
+      } catch (err) {
+        const startingBoard = copyDominoGrid(initialBoard);
+        this.board = startingBoard.board;
+        this.cellValues = startingBoard.cellValues;
+        this.availableDominos = startingBoard.availableDominos;
+        this.shuffleDominoes();
+        startingTime = Date.now();
+        if (timeOutCount === TIME_OUT_LIMIT) {
+          return [];
+        }
+      }
+    }
 
     return result;
   }
