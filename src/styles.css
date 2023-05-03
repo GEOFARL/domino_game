@@ -17,6 +17,7 @@
   --domino-background: #fb7185;
   --domino-background-hover: #f43f5e;
   --select-focus: blue;
+  --muted-input-background-color: #bbb;
 }
 
 .theme-dark {
@@ -31,6 +32,7 @@
   --domino-background: #881337;
   --domino-background-hover: #be123c;
   --select-focus: #4b5563;
+  --muted-input-background-color: #bbb;
 }
 
 *,
@@ -58,6 +60,20 @@ body {
   align-self: center;
 }
 
+.message {
+  color: var(--primary-text-color);
+  font-weight: 400;
+  position: absolute;
+  top: 7rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.muted {
+  background-color: var(--muted-input-background-color);
+}
+
 .content {
   position: relative;
   margin: 0 auto;
@@ -65,7 +81,6 @@ body {
   display: grid;
   grid-template-columns: 50rem 25rem;
   grid-template-rows: 8rem 47rem;
-  /* place-content: center; */
 }
 
 .first-section {
@@ -93,6 +108,30 @@ td {
   color: var(--td-text-color);
 }
 
+td:hover {
+  background-color: var(--td-hover-color);
+  cursor: pointer;
+}
+
+td input {
+  font: inherit;
+  font-weight: 600;
+  background-color: var(--background-color);
+  appearance: none;
+  border: none;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  text-align: center;
+}
+
+td input:disabled {
+  color: inherit;
+}
+
+td input:focus {
+  outline: none;
+}
+
 .number {
   background-color: var(--cell-value-background);
   transition: all 0.2s;
@@ -104,17 +143,12 @@ td {
 
 .domino {
   background-color: var(--domino-background);
-  transition: all 0.4s;
+  transition: all 0.2s;
   animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
 .domino:hover {
   background-color: var(--domino-background-hover);
-}
-
-td:hover {
-  background-color: var(--td-hover-color);
-  cursor: pointer;
 }
 
 .btn {
@@ -144,13 +178,11 @@ td:hover {
   margin: 0 auto;
 }
 
-.margin-top {
-  margin-top: 3rem;
-}
-
 .add-board {
   align-self: center;
   justify-content: flex-start;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
 }
 
 .btn-group--wide {
@@ -183,32 +215,26 @@ td:hover {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
-td input {
-  font: inherit;
-  font-weight: 600;
-  background-color: var(--background-color);
-  appearance: none;
-  border: none;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  text-align: center;
+.btn--disabled {
+  background-color: #bbb;
 }
 
-td input:focus {
-  outline: none;
+.btn--disabled:hover {
+  transform: translateY(0);
+  box-shadow: 0 0rem 0rem rgba(0, 0, 0, 0.2);
+}
+
+.btn--disabled:active {
+  transform: translateY(0);
+  box-shadow: 0 0rem 0rem rgba(0, 0, 0, 0.2);
+}
+
+.margin-top {
+  margin-top: 3rem;
 }
 
 .hide {
   display: none !important;
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 
 .overlay {
@@ -326,14 +352,12 @@ td input:focus {
   background: #fff;
 }
 
-/**/
-
-label {
+.board-select label {
   font-size: 1.6rem;
   font-weight: 500;
 }
 
-select {
+.board-select select {
   appearance: none;
   color: var(--primary-text-color);
   background-color: transparent;
@@ -351,7 +375,7 @@ select {
   outline: none;
 }
 
-select::-ms-expand {
+.board-select select::-ms-expand {
   display: none;
 }
 
@@ -431,4 +455,11 @@ select option {
   outline-color: var(--select-focus);
 }
 
-/**/
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
