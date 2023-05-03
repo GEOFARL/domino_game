@@ -93,7 +93,7 @@ function getTime() {
 
 async function saveFile(board) {
   fs.writeFile(
-    path.join(__dirname, '..', 'savedSolutions', `${getTime()}.txt`),
+    `/Users/geofarl/Documents/Курсова/domino_game/savedSolutions/${getTime()}.txt`,
     formatOutput(board),
     (err) => {
       if (err) {

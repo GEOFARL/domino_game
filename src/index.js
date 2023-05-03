@@ -25,7 +25,9 @@ export const convertToSimple = (boards) => {
         if (board.board[r][c] instanceof CellValue) {
           justBoard[r][c] = board.board[r][c].value;
         } else if (board.board[r][c] instanceof Domino) {
-          justBoard[r][c] = board.board[r][c].getValue(r, c);
+          justBoard[r][c] = `'${board.board[r][c].getValue(r, c)}'`;
+        } else if (board.board[r][c] === false) {
+          justBoard[r][c] = 0;
         }
       }
     }
@@ -151,7 +153,8 @@ removeBoardBtn.addEventListener('click', () => {
   selectOptions[index].remove();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(convertToSimple(boards)));
   boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORAGE_KEY)));
-  [currentBoard] = boards;
+  currentBoard = boards[boards.length - 1];
+  boardSelectEl.value = boards.length - 1;
   ui.board = currentBoard;
   ui.clearBoard();
   ui.displayBoard();

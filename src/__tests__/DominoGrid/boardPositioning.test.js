@@ -6,8 +6,6 @@ describe('DominoGrid', () => {
     let dominoGrid;
 
     beforeEach(() => {
-      dominoGrid = new DominoGrid();
-      // Testing with a 5x5 board
       const board = [
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -15,7 +13,7 @@ describe('DominoGrid', () => {
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
       ];
-      dominoGrid.board = board;
+      dominoGrid = new DominoGrid(5, board);
     });
 
     test('isOnBoard returns true for valid positions', () => {

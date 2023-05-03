@@ -25,20 +25,30 @@ export default class DominoGrid {
   }
 
   generateBoard() {
-    const INTENSITY = 20 + Math.floor(Math.random() * 26);
-    const MIN_VALUE = 1;
-    const MAX_VALUE = 23;
+    const INTENSITY = 80 + Math.floor(Math.random() * 11);
 
     this.board = Array(this.size)
       .fill(0)
       .map(() => Array(this.size).fill(0));
 
+    let tempGrid = new DominoGrid(
+      this.size,
+      Array(this.size)
+        .fill(0)
+        .map(() => Array(this.size).fill(0))
+    );
+
+    [tempGrid] = tempGrid.findAllSolutions();
+    const solvedBoard = tempGrid.board;
+
     for (let r = 0; r < this.size; r += 1) {
       for (let c = 0; c < this.size; c += 1) {
-        if (Math.random() < INTENSITY / 100) {
-          const randomValue =
-            Math.floor(Math.random() * (MAX_VALUE - MIN_VALUE + 1)) + MIN_VALUE;
-          const newCellValue = new CellValue(randomValue, r, c);
+        if (
+          !(solvedBoard[r][c] instanceof Domino) &&
+          Math.random() < INTENSITY / 100
+        ) {
+          const value = tempGrid.findAdjSum(new CellValue(1, r, c));
+          const newCellValue = new CellValue(value, r, c);
           this.cellValues.push(newCellValue);
           this.board[r][c] = newCellValue;
         }
@@ -213,7 +223,7 @@ export default class DominoGrid {
   }
 
   removeDomino(dominoToRemove) {
-    return this.availableDominos.filter(
+    this.availableDominos = this.availableDominos.filter(
       (domino) => !Domino.areTheSame(domino, dominoToRemove)
     );
   }
@@ -228,7 +238,7 @@ export default class DominoGrid {
       if (!value.done) {
         if (this.isSolved(value)) {
           value.done = true;
-          this.markCells(value);
+          // this.markCells(value);
           finishedCells.push(value);
         }
       }
@@ -236,9 +246,9 @@ export default class DominoGrid {
     return finishedCells;
   }
 
-  unMarkFinishedCells(finishedCells) {
+  static unMarkFinishedCells(finishedCells) {
     finishedCells.forEach((cell) => {
-      this.unMarkCells(cell);
+      // this.unMarkCells(cell);
       cell.done = false;
     });
   }
@@ -310,38 +320,6 @@ export default class DominoGrid {
     return sum === cell.value;
   }
 
-  markCells(cell) {
-    const startRow = cell.row - 1;
-    const startCol = cell.col - 1;
-
-    for (let r = startRow; r < startRow + 3; r += 1) {
-      for (let c = startCol; c < startCol + 3; c += 1) {
-        if (this.isPositionFree(r, c)) {
-          this.board[r][c] = false;
-        }
-      }
-    }
-  }
-
-  unMarkCells(cell) {
-    const startRow = cell.row - 1;
-    const startCol = cell.col - 1;
-
-    for (let r = startRow; r < startRow + 3; r += 1) {
-      for (let c = startCol; c < startCol + 3; c += 1) {
-        if (
-          this.isOnBoard(r, c) &&
-          !(
-            this.board[r][c] instanceof Domino ||
-            this.board[r][c] instanceof CellValue
-          )
-        ) {
-          this.board[r][c] = 0;
-        }
-      }
-    }
-  }
-
   validate(pos, direction, domino) {
     const [r1, c1] = pos;
     const [rOff, cOff] = DominoGrid.offsets[direction];
@@ -366,16 +344,13 @@ export default class DominoGrid {
 
   findAllSolutions() {
     const result = [];
-    const TIME_OUT = 90;
-    const TIME_OUT_LIMIT = 10;
+    const TIME_OUT = 60;
+    const TIME_OUT_LIMIT = 3;
     let timeOutCount = 0;
     let startingTime = Date.now();
     const initialBoard = copyDominoGrid(this);
 
-    const solve = () => {
-      // console.log(copyDominoGrid(dominoGrid));
-      // console.log(`Dominos length: ${dominoGrid.availableDominos.length}`);
-
+    const solve = (dominoGrid) => {
       const currentTime = Date.now();
       console.log(`Time passed: ${currentTime - startingTime}`);
       if (currentTime - startingTime > TIME_OUT * 1000) {
@@ -383,7 +358,7 @@ export default class DominoGrid {
         console.error(`Timeout #${timeOutCount + 1}`);
         throw new Error('Timeout');
       }
-      const val = this.findAvailablePosition();
+      const val = dominoGrid.findAvailablePosition();
       let currPos;
       let directions;
       if (val) {
@@ -392,137 +367,135 @@ export default class DominoGrid {
         return false;
       }
 
-      const falseCells = [];
-
       while (currPos) {
         console.log(
           `Current position: ${currPos}, Current Directions: ${directions}`
         );
-        // const initialDominoGrid = copyDominoGrid(dominoGrid);
-        for (let i = 0; i < this.availableDominos.length; i += 1) {
-          const currInitialDomino = copyDomino(this.availableDominos[i]);
-          const currDomino = this.availableDominos[i];
+        for (let i = 0; i < dominoGrid.availableDominos.length; i += 1) {
+          const currInitialDomino = copyDomino(dominoGrid.availableDominos[i]);
+          const currDomino = dominoGrid.availableDominos[i];
           console.log(`in for loop, i: ${i}`);
 
           for (const direction of directions) {
-            const isValid = this.validate(currPos, direction, currDomino);
+            const isValid = dominoGrid.validate(currPos, direction, currDomino);
 
             if (isValid) {
               Domino.setupDomino(currDomino, currPos, direction);
-              this.placeDomino(currDomino);
-              this.availableDominos = this.removeDomino(currDomino);
-              const unFinishedCells = this.findUnFinishedCells();
+              dominoGrid.placeDomino(currDomino);
+              dominoGrid.removeDomino(currDomino);
+              const unFinishedCells = dominoGrid.findUnFinishedCells();
               let finishedCells;
 
               if (unFinishedCells && unFinishedCells.length > 0) {
-                finishedCells = this.markFinishedCells();
-                const cellValue = this.cellValues.find((cell) => !cell.done);
+                finishedCells = dominoGrid.markFinishedCells();
+                const cellValue = dominoGrid.cellValues.find(
+                  (cell) => !cell.done
+                );
 
-                if (this.availableDominos.length === 0 && !cellValue) {
+                if (dominoGrid.availableDominos.length === 0 && !cellValue) {
                   console.log('finished');
-                  result.push(this);
-                  console.log(this);
+                  result.push(dominoGrid);
+                  console.log(dominoGrid);
                   return true;
                 }
 
-                if (cellValue && !this.checkValidity(cellValue)) {
+                if (cellValue && !dominoGrid.checkValidity(cellValue)) {
                   if (finishedCells && finishedCells.length > 0) {
-                    this.unMarkFinishedCells(finishedCells);
+                    DominoGrid.unMarkFinishedCells(finishedCells);
                   }
-                  this.returnInitialDomino(currInitialDomino, i);
-                  this.unPlaceDomino(currDomino);
+                  dominoGrid.returnInitialDomino(currInitialDomino, i);
+                  dominoGrid.unPlaceDomino(currDomino);
                   console.log('continue');
                   continue;
                 }
-              } else if (this.availableDominos.length === 0) {
-                result.push(this);
+              } else if (dominoGrid.availableDominos.length === 0) {
+                result.push(dominoGrid);
                 console.log('finished');
-                console.log(this);
+                console.log(dominoGrid);
                 return true;
               }
               console.log('recursive call');
-              if (solve(copyDominoGrid(this))) {
+              if (solve(copyDominoGrid(dominoGrid))) {
                 return true;
               }
               if (finishedCells && finishedCells.length > 0) {
-                this.unMarkFinishedCells(finishedCells);
+                DominoGrid.unMarkFinishedCells(finishedCells);
               }
-              this.returnInitialDomino(currInitialDomino, i);
-              this.unPlaceDomino(currDomino);
+              dominoGrid.returnInitialDomino(currInitialDomino, i);
+              dominoGrid.unPlaceDomino(currDomino);
             }
           }
 
           Domino.rotateDomino(currDomino);
 
           for (const direction of directions) {
-            const isValid = this.validate(currPos, direction, currDomino);
+            const isValid = dominoGrid.validate(currPos, direction, currDomino);
 
             if (isValid) {
               Domino.setupDomino(currDomino, currPos, direction);
-              this.placeDomino(currDomino);
-              this.availableDominos = this.removeDomino(currDomino);
-              const unFinishedCells = this.findUnFinishedCells();
+              dominoGrid.placeDomino(currDomino);
+              dominoGrid.removeDomino(currDomino);
+              const unFinishedCells = dominoGrid.findUnFinishedCells();
               let finishedCells;
 
               if (unFinishedCells && unFinishedCells.length > 0) {
-                finishedCells = this.markFinishedCells();
-                const cellValue = this.cellValues.find((cell) => !cell.done);
+                finishedCells = dominoGrid.markFinishedCells();
+                const cellValue = dominoGrid.cellValues.find(
+                  (cell) => !cell.done
+                );
 
-                if (this.availableDominos.length === 0 && !cellValue) {
+                if (dominoGrid.availableDominos.length === 0 && !cellValue) {
                   console.log('finished');
-                  result.push(this);
-                  console.log(this);
+                  result.push(dominoGrid);
+                  console.log(dominoGrid);
                   return true;
                 }
 
-                if (cellValue && !this.checkValidity(cellValue)) {
+                if (cellValue && !dominoGrid.checkValidity(cellValue)) {
                   if (finishedCells && finishedCells.length > 0) {
-                    this.unMarkFinishedCells(finishedCells);
+                    DominoGrid.unMarkFinishedCells(finishedCells);
                   }
-                  this.returnInitialDomino(currInitialDomino, i);
-                  this.unPlaceDomino(currDomino);
+                  dominoGrid.returnInitialDomino(currInitialDomino, i);
+                  dominoGrid.unPlaceDomino(currDomino);
                   console.log('continue');
                   continue;
                 }
-              } else if (this.availableDominos.length === 0) {
-                result.push(this);
+              } else if (dominoGrid.availableDominos.length === 0) {
+                result.push(dominoGrid);
                 console.log('finished');
-                console.log(this);
+                console.log(dominoGrid);
                 return true;
               }
               console.log('recursive call');
-              if (solve(copyDominoGrid(this))) {
+              if (solve(copyDominoGrid(dominoGrid))) {
                 return true;
               }
               if (finishedCells && finishedCells.length > 0) {
-                this.unMarkFinishedCells(finishedCells);
+                DominoGrid.unMarkFinishedCells(finishedCells);
               }
-              this.returnInitialDomino(currInitialDomino, i);
-              this.unPlaceDomino(currDomino);
+              dominoGrid.returnInitialDomino(currInitialDomino, i);
+              dominoGrid.unPlaceDomino(currDomino);
             }
           }
         }
         const [r, c] = currPos;
-        this.board[r][c] = false;
-        falseCells.push(currPos);
-        const a = this.findAvailablePosition();
+        dominoGrid.board[r][c] = false;
+        const a = dominoGrid.findAvailablePosition();
         if (a) {
           [currPos, directions] = a;
         } else {
           currPos = null;
         }
       }
-      falseCells.forEach((cell) => {
-        const [r, c] = cell;
-        this.board[r][c] = 0;
-      });
       return false;
     };
 
     while (result.length === 0) {
       try {
         console.warn(this.availableDominos);
-        solve();
+        if (!solve(copyDominoGrid(this))) {
+          return [];
+        }
       } catch (err) {
         const startingBoard = copyDominoGrid(initialBoard);
         this.board = startingBoard.board;

@@ -1,6 +1,6 @@
 {
   "name": "domino_game",
-  "productName": "DominoGame",
+  "productName": "Domino Game",
   "version": "1.0.0",
   "description": "",
   "main": "./src/main.js",
