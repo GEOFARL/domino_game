@@ -120,7 +120,6 @@ export default class UI {
 
                   const offR = i - r;
                   const offC = j - c;
-                  console.log(offR, offC);
 
                   let direction = -1;
                   DominoGrid.offsets.some((offset, index) => {
@@ -161,7 +160,6 @@ export default class UI {
                   }
 
                   this.dominoGrid.availableDominos.splice(dominoIndex, 1);
-                  console.log(domino);
                   this.dominoGrid.placeDomino(domino);
                   e.target.disabled = true;
 
@@ -248,6 +246,18 @@ export default class UI {
       }
     }
     return new DominoGrid(9, board);
+  }
+
+  static disableAllButtons() {
+    [...document.querySelectorAll('button')].forEach((button) => {
+      button.disabled = true;
+    });
+  }
+
+  static enableAllButtons() {
+    [...document.querySelectorAll('button')].forEach((button) => {
+      button.disabled = false;
+    });
   }
 
   hideMainButtons() {

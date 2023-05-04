@@ -53,7 +53,7 @@ describe('CellValue', () => {
 
       const isValid = dominoGrid.checkValidity(cellValue);
 
-      expect(isValid).toBeFalsy();
+      expect(isValid).toBeTruthy();
     });
   });
 

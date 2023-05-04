@@ -18,6 +18,9 @@
   --domino-background-hover: #f43f5e;
   --select-focus: blue;
   --muted-input-background-color: #bbb;
+  --disabled-btn-background-color: #ccc;
+  --modal-info-background-color: #e4e4e7;
+  --modal-info-heading-color: #000;
 }
 
 .theme-dark {
@@ -33,6 +36,9 @@
   --domino-background-hover: #be123c;
   --select-focus: #4b5563;
   --muted-input-background-color: #bbb;
+  --disabled-btn-background-color: #333;
+  --modal-info-background-color: #ecfeff;
+  --modal-info-heading-color: #000;
 }
 
 *,
@@ -151,6 +157,28 @@ td input:focus {
   background-color: var(--domino-background-hover);
 }
 
+#clear-board {
+  position: absolute;
+  top: 6rem;
+  left: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 15rem;
+  padding: 0.9rem 2rem;
+  font-size: 1.1rem;
+  animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+#clear-board img {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+#clear-board p {
+  margin-top: 0.2rem;
+}
+
 .btn {
   color: var(--btn-color);
   text-transform: uppercase;
@@ -216,7 +244,7 @@ td input:focus {
 }
 
 .btn--disabled {
-  background-color: #bbb;
+  background-color: var(--disabled-btn-background-color);
 }
 
 .btn--disabled:hover {
@@ -272,6 +300,10 @@ td input:focus {
   animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
+.modal__info .modal__content {
+  background: var(--modal-info-background-color);
+}
+
 .modal__header {
   display: flex;
   justify-content: space-between;
@@ -282,6 +314,10 @@ td input:focus {
   font-size: 2.9rem;
   color: #4c0519;
   text-transform: uppercase;
+}
+
+.modal__info .modal__header h2 {
+  color: var(--modal-info-heading-color);
 }
 
 .modal__header svg {

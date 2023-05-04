@@ -48,9 +48,11 @@ export default class DominoGrid {
           Math.random() < INTENSITY / 100
         ) {
           const value = tempGrid.findAdjSum(new CellValue(1, r, c));
-          const newCellValue = new CellValue(value, r, c);
-          this.cellValues.push(newCellValue);
-          this.board[r][c] = newCellValue;
+          if (value > 0) {
+            const newCellValue = new CellValue(value, r, c);
+            this.cellValues.push(newCellValue);
+            this.board[r][c] = newCellValue;
+          }
         }
       }
     }
@@ -107,8 +109,9 @@ export default class DominoGrid {
     this.board[r2][c2] = 0;
   }
 
-  isSameInRow(value, row) {
+  isSameInRow(value, row, placedCol) {
     for (let col = 0; col < this.size; col += 1) {
+      if (col === placedCol) continue;
       if (this.isOnBoard(row, col) && this.board[row][col] instanceof Domino) {
         if (this.board[row][col].getValue(row, col) === value) {
           return true;
@@ -118,8 +121,9 @@ export default class DominoGrid {
     return false;
   }
 
-  isSameInCol(value, col) {
+  isSameInCol(value, col, placedRow) {
     for (let row = 0; row < this.size; row += 1) {
+      if (row === placedRow) continue;
       if (this.isOnBoard(row, col) && this.board[row][col] instanceof Domino) {
         if (this.board[row][col].getValue(row, col) === value) {
           return true;
@@ -312,7 +316,7 @@ export default class DominoGrid {
       return direction.length > 0;
     });
 
-    return sum <= cell.value && possibleMoves.length > 0;
+    return sum === cell.value || (sum < cell.value && possibleMoves.length > 0);
   }
 
   isSolved(cell) {
@@ -337,6 +341,42 @@ export default class DominoGrid {
     }
     if (this.isAdjDomino([r1, c1], direction)) {
       return false;
+    }
+
+    return true;
+  }
+
+  validateSolution() {
+    let isValid = true;
+    isValid = this.cellValues.every((cellValue) =>
+      this.checkValidity(cellValue)
+    );
+    if (!isValid) {
+      return false;
+    }
+    console.log('cells are valid');
+
+    for (let r = 0; r < this.size; r += 1) {
+      for (let c = 0; c < this.size; c += 1) {
+        if (this.board[r][c] instanceof Domino) {
+          const domino = this.board[r][c];
+          if (
+            this.isSameInRow(domino.getValue(r, c), r, c) ||
+            this.isSameInCol(domino.getValue(r, c), c, r)
+          ) {
+            console.log(this);
+            console.log(domino);
+            console.log('1', r, c);
+            return false;
+          }
+          if (r === domino.tipRow && c === domino.tipCol) {
+            if (this.isAdjDomino([r, c], domino.direction)) {
+              console.log('2', r, c);
+              return false;
+            }
+          }
+        }
+      }
     }
 
     return true;

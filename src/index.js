@@ -6,6 +6,7 @@ import UI from './UI';
 import DominoGrid from './DominoGrid';
 import copyDominoGrid from './copyFunc';
 import './theme';
+import { startConfetti, stopConfetti } from './confetti';
 import { convertOutOfSimple, convertToSimple } from './conversionFunc';
 
 let boards;
@@ -22,7 +23,6 @@ if (localStorage.getItem(STORE_KEY)) {
   );
   [currentBoard] = initialBoards;
 }
-
 const ui = new UI(currentBoard);
 
 const addBoardBtn = document.getElementById('add-board');
@@ -37,7 +37,10 @@ const removeBoardBtn = document.getElementById('remove-current-board');
 const overlay = document.querySelector('.overlay');
 const modal = document.querySelector('.modal');
 const closeModalBtn = document.querySelector('.modal__header svg');
+const modalInfo = document.querySelector('.modal__info');
+const closeModalInfoBtn = document.querySelector('.modal__info svg');
 const generateBtn = document.getElementById('generate');
+const clearBoardBtn = document.getElementById('clear-board');
 
 let generatedBoard = null;
 
@@ -47,6 +50,13 @@ const addOption = (index) => {
   option.innerText = `Board №${index + 1}`;
   boardSelectEl.appendChild(option);
 };
+
+clearBoardBtn.addEventListener('click', () => {
+  ui.dominoGrid = copyDominoGrid(currentBoard);
+  ui.clearBoard();
+  ui.displayBoard();
+  clearBoardBtn.classList.add('hide');
+});
 
 generateBtn.addEventListener('click', () => {
   ui.showMessage('Generating a board...');
@@ -68,6 +78,11 @@ closeModalBtn.addEventListener('click', () => {
   modal.classList.add('hide');
 });
 
+closeModalInfoBtn.addEventListener('click', () => {
+  overlay.classList.add('hide');
+  modalInfo.classList.add('hide');
+});
+
 addBoardExitBtn.addEventListener('click', () => {
   ui.hideAddBoardButtons();
   ui.showMainButtons();
@@ -87,7 +102,9 @@ addBoardExitBtn.addEventListener('click', () => {
 solveBoardExitBtn.addEventListener('click', () => {
   ui.hideSolveBoardButtons();
   ui.showMainButtons();
+  console.log(currentBoard);
   ui.dominoGrid = copyDominoGrid(currentBoard);
+  console.log(ui.dominoGrid);
   ui.clearBoard();
   ui.displayBoard();
 });
@@ -121,7 +138,28 @@ addBoardBtn.addEventListener('click', () => {
 finishSolvingBtn.addEventListener('click', () => {
   ui.hideSolveBoardButtons();
   ui.showMainButtons();
-  ui.dominoGrid = copyDominoGrid(currentBoard);
+  ui.hideMessage();
+  if (ui.dominoGrid.validateSolution()) {
+    overlay.classList.remove('hide');
+    modalInfo.classList.remove('hide');
+    UI.disableAllButtons();
+    startConfetti();
+    stopConfetti();
+    setTimeout(() => UI.enableAllButtons(), 7000);
+    setTimeout(() => clearBoardBtn.classList.remove('hide'), 1000);
+    if (window.dominoAPI) {
+      window.dominoAPI.saveSolution(
+        ...convertToSimple([copyDominoGrid(ui.dominoGrid)])
+      );
+    }
+    // ui.showMessage('Your solution is correct');
+  } else {
+    ui.showMessage('Your solution is incorrect');
+    clearBoardBtn.classList.remove('hide');
+    setTimeout(() => {
+      ui.hideMessage();
+    }, 3500);
+  }
   ui.clearBoard();
   ui.displayBoard();
 });
@@ -130,7 +168,8 @@ removeBoardBtn.addEventListener('click', () => {
   const index = boards.findIndex((val) => val === currentBoard);
   boards.splice(index, 1);
   const selectOptions = [...boardSelectEl.children];
-  selectOptions[index].remove();
+  selectOptions.forEach((option) => option.remove());
+  boards.forEach((board, indexx) => addOption(indexx));
   localStorage.setItem(STORE_KEY, JSON.stringify(convertToSimple(boards)));
   boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
   currentBoard = boards[boards.length - 1];
@@ -148,6 +187,7 @@ enterNewBoardBtn.addEventListener('click', () => {
 
 solveYourselfBtn.addEventListener('click', () => {
   ui.hideMainButtons();
+  ui.dominoGrid = copyDominoGrid(currentBoard);
   ui.solveYourself();
   ui.showSolveBoardButtons();
 });
@@ -160,6 +200,7 @@ boardSelectEl.addEventListener('change', (e) => {
   ui.dominoGrid = copyDominoGrid(currentBoard);
   ui.clearBoard();
   ui.displayBoard();
+  clearBoardBtn.classList.add('hide');
 });
 
 solveAIBtn.addEventListener('click', () => {
@@ -170,11 +211,19 @@ solveAIBtn.addEventListener('click', () => {
 
     try {
       [ui.dominoGrid] = solutions;
+      ui.clearBoard();
       ui.displayBoard();
       ui.dominoGrid = copyDominoGrid(currentBoard);
-      if (window.dominoAPI) {
-        console.log('here');
-        window.dominoAPI.saveSolution(...convertToSimple(solutions));
+      if (solutions.length !== 0) {
+        UI.disableAllButtons();
+        startConfetti();
+        stopConfetti();
+        setTimeout(() => UI.enableAllButtons(), 7000);
+        setTimeout(() => clearBoardBtn.classList.remove('hide'), 1000);
+
+        if (window.dominoAPI) {
+          window.dominoAPI.saveSolution(...convertToSimple(solutions));
+        }
       }
     } catch (err) {
       console.log(err);
