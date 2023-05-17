@@ -206,7 +206,7 @@ boardSelectEl.addEventListener('change', (e) => {
 solveAIBtn.addEventListener('click', () => {
   ui.showMessage('AI is currently working on the problem...');
   setTimeout(() => {
-    const solutions = copyDominoGrid(currentBoard).findAllSolutions();
+    const solutions = copyDominoGrid(currentBoard).findSolution();
     console.log(solutions);
 
     try {

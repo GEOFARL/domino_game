@@ -11,7 +11,6 @@ export default class DominoGrid {
       this.board.forEach((row) => {
         row.forEach((value) => {
           if (value instanceof CellValue) {
-            value.dominoGrid = this;
             this.cellValues.push(value);
           }
         });
@@ -38,7 +37,7 @@ export default class DominoGrid {
         .map(() => Array(this.size).fill(0))
     );
 
-    [tempGrid] = tempGrid.findAllSolutions();
+    [tempGrid] = tempGrid.findSolution();
     const solvedBoard = tempGrid.board;
 
     for (let r = 0; r < this.size; r += 1) {
@@ -382,7 +381,7 @@ export default class DominoGrid {
     return true;
   }
 
-  findAllSolutions() {
+  findSolution() {
     const result = [];
     const TIME_OUT = 60;
     const TIME_OUT_LIMIT = 3;

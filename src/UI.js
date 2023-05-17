@@ -1,6 +1,7 @@
 import CellValue from './CellValue';
 import Domino from './Domino';
 import DominoGrid from './DominoGrid';
+import Message from './Message';
 
 export default class UI {
   constructor(dominoGrid) {
@@ -10,7 +11,7 @@ export default class UI {
     this.firstSection = document.querySelector('.first-section');
     this.addBoardSection = document.querySelector('.add-board');
     this.solveBoardSection = document.querySelector('.solve-board');
-    this.message = document.querySelector('.message');
+    this.message = new Message(document.querySelector('.message'));
     this.finishSolvingBtn = document.getElementById('finish-solving');
 
     this.activeInputs = [];
@@ -287,11 +288,10 @@ export default class UI {
   }
 
   showMessage(text) {
-    this.message.classList.toggle('hide');
-    this.message.innerText = text;
+    this.message.show(text);
   }
 
   hideMessage() {
-    this.message.classList.toggle('hide');
+    this.message.hide();
   }
 }
