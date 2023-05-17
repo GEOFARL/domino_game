@@ -89,7 +89,7 @@ body {
   grid-template-rows: 8rem 47rem;
 }
 
-.first-section {
+.menu-section {
   grid-row: 2 / 3;
   grid-column: 2 / 3;
 }

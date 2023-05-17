@@ -3,11 +3,13 @@ import './styles.css';
 
 import initialBoards from './initialBoards';
 import UI from './UI';
+import Section from './Section';
 import DominoGrid from './DominoGrid';
 import copyDominoGrid from './copyFunc';
 import './theme';
 import { startConfetti, stopConfetti } from './confetti';
 import { convertOutOfSimple, convertToSimple } from './conversionFunc';
+import Message from './Message';
 
 let boards;
 let currentBoard;
@@ -23,7 +25,19 @@ if (localStorage.getItem(STORE_KEY)) {
   );
   [currentBoard] = initialBoards;
 }
-const ui = new UI(currentBoard);
+
+const menuSection = new Section(document.querySelector('.menu-section'));
+const addBoardSection = new Section(document.querySelector('.add-board'));
+const solveBoardSection = new Section(document.querySelector('.solve-board'));
+const messageElement = new Message(document.querySelector('.message'));
+
+const ui = new UI(
+  currentBoard,
+  menuSection,
+  addBoardSection,
+  solveBoardSection,
+  messageElement
+);
 
 const addBoardBtn = document.getElementById('add-board');
 const addBoardExitBtn = document.getElementById('add-board-exit');
