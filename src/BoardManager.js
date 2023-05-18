@@ -60,6 +60,9 @@ export default class BoardManager {
 
     for (let i = 0; i < dominoGrid.size; i += 1) {
       for (let j = 0; j < dominoGrid.size; j += 1) {
+        console.log(this.domGrid);
+        console.log(i, j);
+        console.log(this.domGrid[i][j]);
         const { value } = this.domGrid[i][j].querySelector('input');
         if (value.length !== 0) {
           board[i][j] = new CellValue(+value, i, j);

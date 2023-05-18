@@ -3,13 +3,12 @@ import GridRenderer from './GridRenderer';
 
 export default class UI {
   constructor(
-    dominoGrid,
     menu,
     addBoardSection,
     solveBoardSection,
-    messageElement
+    messageElement,
+    boardSelect
   ) {
-    this.dominoGrid = dominoGrid;
     this.domGrid = [];
 
     this.boardManager = new BoardManager(this.domGrid);
@@ -18,38 +17,49 @@ export default class UI {
     this.addBoardSection = addBoardSection;
     this.solveBoardSection = solveBoardSection;
     this.message = messageElement;
+    this.boardSelect = boardSelect;
     this.finishSolvingBtn = document.getElementById('finish-solving');
 
     const domTD = [...document.querySelectorAll('td')];
     for (let i = 0; i < domTD.length; i += 9) {
-      this.domGrid.push(domTD.slice(i, i + 10));
+      this.domGrid.push(domTD.slice(i, i + 9));
     }
-
-    this.displayBoard();
   }
 
-  clearBoard() {
-    GridRenderer.clearBoard(this.domGrid, this.dominoGrid);
+  removeBoardOption(boards) {
+    this.boardSelect.removeOption(boards);
   }
 
-  displayBoard() {
-    GridRenderer.displayBoard(this.dominoGrid, this.domGrid);
+  switchSelectedBoard(value) {
+    this.boardSelect.changeValue(value);
   }
 
-  addNewBoard() {
-    this.boardManager.addNewBoard(this.dominoGrid);
+  addSelectOption(value) {
+    this.boardSelect.addOption(value);
   }
 
-  solveYourself() {
+  clearBoard(dominoGrid) {
+    GridRenderer.clearBoard(this.domGrid, dominoGrid);
+  }
+
+  displayBoard(dominoGrid) {
+    GridRenderer.displayBoard(dominoGrid, this.domGrid);
+  }
+
+  addNewBoard(dominoGrid) {
+    this.boardManager.addNewBoard(dominoGrid);
+  }
+
+  solveYourself(dominoGrid) {
     this.boardManager.solveYourself(
-      this.dominoGrid,
+      dominoGrid,
       this.message,
       this.finishSolvingBtn
     );
   }
 
-  getNewBoard() {
-    return this.boardManager.getNewBoard(this.dominoGrid);
+  getNewBoard(dominoGrid) {
+    return this.boardManager.getNewBoard(dominoGrid);
   }
 
   hideMainButtons() {
@@ -84,5 +94,17 @@ export default class UI {
 
   hideMessage() {
     this.message.hide();
+  }
+
+  static disableAllButtons() {
+    [...document.querySelectorAll('button')].forEach((button) => {
+      button.disabled = true;
+    });
+  }
+
+  static enableAllButtons() {
+    [...document.querySelectorAll('button')].forEach((button) => {
+      button.disabled = false;
+    });
   }
 }
