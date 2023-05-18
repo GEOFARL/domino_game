@@ -12,6 +12,7 @@ import Message from './Message';
 import BoardSelect from './BoardSelect';
 import Modal from './Modal';
 import ThemeManager from './ThemeManager';
+import LocalStorageManager from './LocalStorageManager';
 
 let boards;
 let currentBoard;
@@ -19,16 +20,26 @@ let solveYourselfBoard;
 let generatedBoard = null;
 const STORE_KEY = 'SAVED_BOARDS';
 
-if (localStorage.getItem(STORE_KEY)) {
-  boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
+const localStorageManager = new LocalStorageManager(STORE_KEY);
+
+if (localStorageManager.existBoards()) {
+  boards = localStorageManager.getBoards();
   [currentBoard] = boards;
 } else {
-  localStorage.setItem(
-    STORE_KEY,
-    JSON.stringify(convertToSimple(initialBoards))
-  );
+  localStorageManager.saveBoards(initialBoards);
   [currentBoard] = initialBoards;
 }
+
+// if (localStorage.getItem(STORE_KEY)) {
+//   boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
+//   [currentBoard] = boards;
+// } else {
+//   localStorage.setItem(
+//     STORE_KEY,
+//     JSON.stringify(convertToSimple(initialBoards))
+//   );
+//   [currentBoard] = initialBoards;
+// }
 
 const themeManager = new ThemeManager();
 themeManager.init();
@@ -137,8 +148,10 @@ addBoardBtn.addEventListener('click', () => {
     newBoard = ui.getNewBoard(currentBoard);
   }
   boards.push(newBoard);
-  localStorage.setItem(STORE_KEY, JSON.stringify(convertToSimple(boards)));
-  boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
+  // localStorage.setItem(STORE_KEY, JSON.stringify(convertToSimple(boards)));
+  localStorageManager.saveBoards(boards);
+  // boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
+  boards = localStorageManager.getBoards();
 
   ui.hideAddBoardButtons();
   ui.showMainButtons();
@@ -185,8 +198,10 @@ removeBoardBtn.addEventListener('click', () => {
   const index = boards.findIndex((val) => val === currentBoard);
   boards.splice(index, 1);
   ui.removeBoardOption(boards);
-  localStorage.setItem(STORE_KEY, JSON.stringify(convertToSimple(boards)));
-  boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
+  // localStorage.setItem(STORE_KEY, JSON.stringify(convertToSimple(boards)));
+  localStorageManager.saveBoards(boards);
+  // boards = convertOutOfSimple(JSON.parse(localStorage.getItem(STORE_KEY)));
+  boards = localStorageManager.getBoards();
   currentBoard = boards[boards.length - 1];
   ui.switchSelectedBoard(boards.length - 1);
   const dominoGrid = copyDominoGrid(currentBoard);
