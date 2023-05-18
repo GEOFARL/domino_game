@@ -1,5 +1,5 @@
-import Domino from './Domino';
-import DominoGrid from './DominoGrid';
+import Domino from '../gameLogic/Domino';
+import DominoGrid from '../gameLogic/DominoGrid';
 
 export default class InputHandler {
   constructor() {

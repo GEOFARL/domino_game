@@ -1,5 +1,5 @@
-import BoardManager from './BoardManager';
-import GridRenderer from './GridRenderer';
+import BoardManager from '../helperClasses/BoardManager';
+import GridRenderer from '../helperClasses/GridRenderer';
 
 export default class UI {
   constructor(

@@ -1,4 +1,4 @@
-import { convertOutOfSimple, convertToSimple } from './conversionFunc';
+import { convertOutOfSimple, convertToSimple } from '../helpers/conversionFunc';
 
 export default class LocalStorageManager {
   constructor(storeKey) {

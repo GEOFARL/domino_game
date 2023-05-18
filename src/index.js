@@ -1,18 +1,18 @@
 import './template.html';
 import './styles.css';
 
-import initialBoards from './initialBoards';
-import UI from './UI';
+import initialBoards from './initialBoards/initialBoards';
+import UI from './view/UI';
 import Section from './components/Section';
-import copyDominoGrid from './copyFunc';
+import copyDominoGrid from './helpers/copyFunc';
 import Message from './components/Message';
 import BoardSelect from './components/BoardSelect';
 import Modal from './components/Modal';
-import ThemeManager from './ThemeManager';
-import LocalStorageManager from './LocalStorageManager';
-import BoardEventHandler from './BoardEventHandler';
-import ModalEventHandlers from './ModalEventHandler';
-import SolveBoardEventHandler from './SolveBoardEventHandler';
+import ThemeManager from './view/ThemeManager';
+import LocalStorageManager from './data/LocalStorageManager';
+import BoardEventHandler from './eventHandlers/BoardEventHandler';
+import ModalEventHandlers from './eventHandlers/ModalEventHandler';
+import SolveBoardEventHandler from './eventHandlers/SolveBoardEventHandler';
 
 let boards;
 let currentBoard;

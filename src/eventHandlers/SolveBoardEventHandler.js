@@ -1,7 +1,7 @@
-import UI from './UI';
-import { startConfetti, stopConfetti } from './confetti';
-import { convertToSimple } from './conversionFunc';
-import copyDominoGrid from './copyFunc';
+import UI from '../view/UI';
+import { startConfetti, stopConfetti } from '../helpers/confetti';
+import { convertToSimple } from '../helpers/conversionFunc';
+import copyDominoGrid from '../helpers/copyFunc';
 
 export default class SolveBoardEventHandler {
   constructor(ui, solveYourselfBoard, currentBoard, boardEventHandler) {

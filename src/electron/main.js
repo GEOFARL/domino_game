@@ -3,7 +3,8 @@ const path = require('path');
 const fs = require('fs');
 
 const isMac = process.platform === 'darwin';
-const isDev = require('electron-is-dev');
+// const isDev = require('electron-is-dev');
+const isDev = true;
 
 let mainWindow;
 
@@ -11,7 +12,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: isDev ? 1250 : 950,
     height: 670,
-    icon: path.join(__dirname, 'assets', 'domino-icon.png'),
+    icon: path.join(__dirname, '..', 'assets', 'domino-icon.png'),
     resizable: isDev,
     webPreferences: {
       nodeIntegration: true,
@@ -23,7 +24,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 
-  mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
 }
 
 const template = [
@@ -49,7 +50,7 @@ const template = [
     label: 'File',
     submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
   },
-  // { role: 'viewMenu' }
+  // { role: 'viewMenu' },
   {
     label: 'View',
     submenu: [

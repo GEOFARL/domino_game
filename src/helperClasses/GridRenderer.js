@@ -1,5 +1,5 @@
-import CellValue from './CellValue';
-import Domino from './Domino';
+import CellValue from '../gameLogic/CellValue';
+import Domino from '../gameLogic/Domino';
 
 export default class GridRenderer {
   static clearBoard(domGrid, dominoGrid) {

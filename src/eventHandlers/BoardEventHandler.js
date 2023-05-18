@@ -1,5 +1,5 @@
-import DominoGrid from './DominoGrid';
-import copyDominoGrid from './copyFunc';
+import DominoGrid from '../gameLogic/DominoGrid';
+import copyDominoGrid from '../helpers/copyFunc';
 
 export default class BoardEventHandler {
   constructor(ui, currentBoard, boards, localStorageManager) {

@@ -1,6 +1,6 @@
 import CellValue from './CellValue';
 import Domino from './Domino';
-import copyDominoGrid, { copyDomino } from './copyFunc';
+import copyDominoGrid, { copyDomino } from '../helpers/copyFunc';
 
 export default class DominoGrid {
   constructor(size, initialBoard = null) {

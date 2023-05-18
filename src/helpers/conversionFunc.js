@@ -1,6 +1,6 @@
-import CellValue from './CellValue';
-import Domino from './Domino';
-import DominoGrid from './DominoGrid';
+import CellValue from '../gameLogic/CellValue';
+import Domino from '../gameLogic/Domino';
+import DominoGrid from '../gameLogic/DominoGrid';
 
 export const convertToSimple = (boards) => {
   if (boards.length === 0) {

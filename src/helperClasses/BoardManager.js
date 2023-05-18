@@ -1,5 +1,5 @@
-import CellValue from './CellValue';
-import DominoGrid from './DominoGrid';
+import CellValue from '../gameLogic/CellValue';
+import DominoGrid from '../gameLogic/DominoGrid';
 import InputHandler from './InputHandler';
 
 export default class BoardManager {
