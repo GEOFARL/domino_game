@@ -1,22 +1,20 @@
-export default class BoardSelect {
-  constructor(selectEl) {
-    this.select = selectEl;
-  }
+import BaseComponent from './BaseComponent';
 
+export default class BoardSelect extends BaseComponent {
   addOption(index) {
     const option = document.createElement('option');
     option.value = index;
     option.innerText = `Board №${index + 1}`;
-    this.select.appendChild(option);
+    this.element.appendChild(option);
   }
 
   removeOption(boards) {
-    const selectOptions = [...this.select.children];
+    const selectOptions = [...this.element.children];
     selectOptions.forEach((option) => option.remove());
     boards.forEach((board, indexx) => this.addOption(indexx));
   }
 
   changeValue(newValue) {
-    this.select.value = newValue;
+    this.element.value = newValue;
   }
 }

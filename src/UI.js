@@ -147,11 +147,11 @@ export default class UI {
   }
 
   showMessage(text) {
-    this.message.show(text);
+    this.message.showMessage(text);
   }
 
   hideMessage() {
-    this.message.hide();
+    this.message.hideMessage();
   }
 
   static disableAllButtons() {

@@ -3,11 +3,11 @@ import './styles.css';
 
 import initialBoards from './initialBoards';
 import UI from './UI';
-import Section from './Section';
+import Section from './components/Section';
 import copyDominoGrid from './copyFunc';
-import Message from './Message';
-import BoardSelect from './BoardSelect';
-import Modal from './Modal';
+import Message from './components/Message';
+import BoardSelect from './components/BoardSelect';
+import Modal from './components/Modal';
 import ThemeManager from './ThemeManager';
 import LocalStorageManager from './LocalStorageManager';
 import BoardEventHandler from './BoardEventHandler';
@@ -73,7 +73,7 @@ const solveBoardEventHandler = new SolveBoardEventHandler(
 );
 solveBoardEventHandler.init();
 
-ui.boardSelect.select.addEventListener('change', (e) => {
+ui.boardSelect.element.addEventListener('change', (e) => {
   currentBoard = boards[e.target.value];
   const dominoGrid = copyDominoGrid(currentBoard);
   boardEventHandler.setCurrentBoard(dominoGrid);

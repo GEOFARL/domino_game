@@ -1,16 +1,18 @@
-export default class Modal {
+import BaseComponent from './BaseComponent';
+
+export default class Modal extends BaseComponent {
   constructor(modal, overlay) {
-    this.modal = modal;
+    super(modal);
     this.overlay = overlay;
   }
 
   show() {
     this.overlay.classList.remove('hide');
-    this.modal.classList.remove('hide');
+    super.show();
   }
 
   hide() {
     this.overlay.classList.add('hide');
-    this.modal.classList.add('hide');
+    super.hide();
   }
 }
