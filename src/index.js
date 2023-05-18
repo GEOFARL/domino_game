@@ -6,11 +6,12 @@ import UI from './UI';
 import Section from './Section';
 import DominoGrid from './DominoGrid';
 import copyDominoGrid from './copyFunc';
-import './theme';
 import { startConfetti, stopConfetti } from './confetti';
 import { convertOutOfSimple, convertToSimple } from './conversionFunc';
 import Message from './Message';
 import BoardSelect from './BoardSelect';
+import Modal from './Modal';
+import ThemeManager from './ThemeManager';
 
 let boards;
 let currentBoard;
@@ -29,18 +30,30 @@ if (localStorage.getItem(STORE_KEY)) {
   [currentBoard] = initialBoards;
 }
 
+const themeManager = new ThemeManager();
+themeManager.init();
 const menuSection = new Section(document.querySelector('.menu-section'));
 const addBoardSection = new Section(document.querySelector('.add-board'));
 const solveBoardSection = new Section(document.querySelector('.solve-board'));
 const messageElement = new Message(document.querySelector('.message'));
 const boardSelect = new BoardSelect(document.getElementById('standard-select'));
+const modalError = new Modal(
+  document.querySelector('.modal'),
+  document.querySelector('.overlay')
+);
+const modalInfo = new Modal(
+  document.querySelector('.modal__info'),
+  document.querySelector('.overlay')
+);
 
 const ui = new UI(
   menuSection,
   addBoardSection,
   solveBoardSection,
   messageElement,
-  boardSelect
+  boardSelect,
+  modalError,
+  modalInfo
 );
 ui.displayBoard(currentBoard);
 
@@ -52,10 +65,7 @@ const enterNewBoardBtn = document.getElementById('enter-new-board');
 const solveAIBtn = document.getElementById('solve-ai');
 const solveYourselfBtn = document.getElementById('solve-yourself');
 const removeBoardBtn = document.getElementById('remove-current-board');
-const overlay = document.querySelector('.overlay');
-const modal = document.querySelector('.modal');
 const closeModalBtn = document.querySelector('.modal__header svg');
-const modalInfo = document.querySelector('.modal__info');
 const closeModalInfoBtn = document.querySelector('.modal__info svg');
 const generateBtn = document.getElementById('generate');
 const clearBoardBtn = document.getElementById('clear-board');
@@ -83,13 +93,11 @@ generateBtn.addEventListener('click', () => {
 });
 
 closeModalBtn.addEventListener('click', () => {
-  overlay.classList.add('hide');
-  modal.classList.add('hide');
+  ui.hideModal('error');
 });
 
 closeModalInfoBtn.addEventListener('click', () => {
-  overlay.classList.add('hide');
-  modalInfo.classList.add('hide');
+  ui.hideModal('info');
 });
 
 addBoardExitBtn.addEventListener('click', () => {
@@ -150,8 +158,7 @@ finishSolvingBtn.addEventListener('click', () => {
   ui.showMainButtons();
   ui.hideMessage();
   if (solveYourselfBoard.validateSolution()) {
-    overlay.classList.remove('hide');
-    modalInfo.classList.remove('hide');
+    ui.showModal('info');
     UI.disableAllButtons();
     startConfetti();
     stopConfetti();
@@ -234,8 +241,7 @@ solveAIBtn.addEventListener('click', () => {
       }
     } catch (err) {
       console.log(err);
-      overlay.classList.remove('hide');
-      modal.classList.remove('hide');
+      ui.showModal('error');
     }
     ui.hideMessage();
   }, 300);

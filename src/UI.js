@@ -7,7 +7,9 @@ export default class UI {
     addBoardSection,
     solveBoardSection,
     messageElement,
-    boardSelect
+    boardSelect,
+    modalError,
+    modalInfo
   ) {
     this.domGrid = [];
 
@@ -18,11 +20,43 @@ export default class UI {
     this.solveBoardSection = solveBoardSection;
     this.message = messageElement;
     this.boardSelect = boardSelect;
+    this.modalError = modalError;
+    this.modalInfo = modalInfo;
     this.finishSolvingBtn = document.getElementById('finish-solving');
 
     const domTD = [...document.querySelectorAll('td')];
     for (let i = 0; i < domTD.length; i += 9) {
       this.domGrid.push(domTD.slice(i, i + 9));
+    }
+  }
+
+  showModal(type) {
+    switch (type) {
+      case 'info': {
+        this.modalInfo.show();
+        break;
+      }
+      case 'error': {
+        this.modalError.show();
+        break;
+      }
+      default:
+        console.log('nothing');
+    }
+  }
+
+  hideModal(type) {
+    switch (type) {
+      case 'info': {
+        this.modalInfo.hide();
+        break;
+      }
+      case 'error': {
+        this.modalError.hide();
+        break;
+      }
+      default:
+        console.log('nothing');
     }
   }
 
