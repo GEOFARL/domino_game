@@ -22,7 +22,9 @@ export default class UI {
     this.boardSelect = boardSelect;
     this.modalError = modalError;
     this.modalInfo = modalInfo;
+
     this.finishSolvingBtn = document.getElementById('finish-solving');
+    this.clearBoardBtn = document.getElementById('clear-board');
 
     const domTD = [...document.querySelectorAll('td')];
     for (let i = 0; i < domTD.length; i += 9) {
@@ -96,30 +98,52 @@ export default class UI {
     return this.boardManager.getNewBoard(dominoGrid);
   }
 
-  hideMainButtons() {
-    this.menuSection.hide();
+  showButtons(type) {
+    switch (type) {
+      case 'main': {
+        this.menuSection.show();
+        break;
+      }
+      case 'addBoard': {
+        this.addBoardSection.show();
+        break;
+      }
+      case 'solveBoard': {
+        this.solveBoardSection.show();
+        this.finishSolvingBtn.classList.add('btn--disabled');
+        this.finishSolvingBtn.disabled = true;
+        break;
+      }
+      case 'clearBoard': {
+        this.clearBoardBtn.classList.remove('hide');
+        break;
+      }
+      default:
+        console.log('nothing');
+    }
   }
 
-  showMainButtons() {
-    this.menuSection.show();
-  }
-
-  showAddBoardButtons() {
-    this.addBoardSection.show();
-  }
-
-  hideAddBoardButtons() {
-    this.addBoardSection.hide();
-  }
-
-  showSolveBoardButtons() {
-    this.solveBoardSection.show();
-    this.finishSolvingBtn.classList.add('btn--disabled');
-    this.finishSolvingBtn.disabled = true;
-  }
-
-  hideSolveBoardButtons() {
-    this.solveBoardSection.hide();
+  hideButtons(type) {
+    switch (type) {
+      case 'main': {
+        this.menuSection.hide();
+        break;
+      }
+      case 'addBoard': {
+        this.addBoardSection.hide();
+        break;
+      }
+      case 'solveBoard': {
+        this.solveBoardSection.hide();
+        break;
+      }
+      case 'clearBoard': {
+        this.clearBoardBtn.classList.add('hide');
+        break;
+      }
+      default:
+        console.log('nothing');
+    }
   }
 
   showMessage(text) {
