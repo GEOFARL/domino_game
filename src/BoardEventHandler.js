@@ -14,6 +14,7 @@ export default class BoardEventHandler {
     this.addBoardExitBtn = document.getElementById('add-board-exit');
     this.removeBoardBtn = document.getElementById('remove-current-board');
     this.addBoardBtn = document.getElementById('add-board');
+    this.enterNewBoardBtn = document.getElementById('enter-new-board');
   }
 
   init() {
@@ -22,12 +23,16 @@ export default class BoardEventHandler {
     this.handleAddBoardExit = this.handleAddBoardExit.bind(this);
     this.handleRemoveBoard = this.handleRemoveBoard.bind(this);
     this.handleAddBoard = this.handleAddBoard.bind(this);
+    this.handleEnterNewBoard = this.handleEnterNewBoard.bind(this);
 
     this.clearBoardBtn.addEventListener('click', this.handleClearBoard);
     this.generateBtn.addEventListener('click', this.handleGenerateBoard);
     this.addBoardExitBtn.addEventListener('click', this.handleAddBoardExit);
     this.removeBoardBtn.addEventListener('click', this.handleRemoveBoard);
     this.addBoardBtn.addEventListener('click', this.handleAddBoard);
+    this.enterNewBoardBtn.addEventListener('click', this.handleEnterNewBoard);
+
+    this.boards.forEach((board, index) => this.ui.addSelectOption(index));
   }
 
   handleClearBoard() {
@@ -120,6 +125,12 @@ export default class BoardEventHandler {
     this.ui.clearBoard(dominoGrid);
     this.ui.displayBoard(dominoGrid);
     this.ui.switchSelectedBoard(`${this.boards.length - 1}`);
+  }
+
+  handleEnterNewBoard() {
+    this.ui.hideButtons('main');
+    this.ui.addNewBoard(this.currentBoard);
+    this.ui.showButtons('addBoard');
   }
 
   getCurrentBoard() {
