@@ -12,7 +12,8 @@ import BoardSelect from './BoardSelect';
 import Modal from './Modal';
 import ThemeManager from './ThemeManager';
 import LocalStorageManager from './LocalStorageManager';
-import BoardEventHandler from './BoardEventHandlers';
+import BoardEventHandler from './BoardEventHandler';
+import ModalEventHandlers from './ModalEventHandler';
 
 let boards;
 let currentBoard;
@@ -63,23 +64,14 @@ const boardEventHandler = new BoardEventHandler(
   localStorageManager
 );
 boardEventHandler.init();
+const modalEventHandler = new ModalEventHandlers(ui);
+modalEventHandler.init();
 
-const addBoardBtn = document.getElementById('add-board');
 const finishSolvingBtn = document.getElementById('finish-solving');
 const solveBoardExitBtn = document.getElementById('solve-board-exit');
 const enterNewBoardBtn = document.getElementById('enter-new-board');
 const solveAIBtn = document.getElementById('solve-ai');
 const solveYourselfBtn = document.getElementById('solve-yourself');
-const closeModalBtn = document.querySelector('.modal__header svg');
-const closeModalInfoBtn = document.querySelector('.modal__info svg');
-
-closeModalBtn.addEventListener('click', () => {
-  ui.hideModal('error');
-});
-
-closeModalInfoBtn.addEventListener('click', () => {
-  ui.hideModal('info');
-});
 
 solveBoardExitBtn.addEventListener('click', () => {
   ui.hideButtons('solveBoard');
@@ -89,34 +81,6 @@ solveBoardExitBtn.addEventListener('click', () => {
   console.log(ui.dominoGrid);
   ui.clearBoard(dominoGrid);
   ui.displayBoard(dominoGrid);
-});
-
-addBoardBtn.addEventListener('click', () => {
-  console.log(boards);
-  let newBoard;
-
-  if (boardEventHandler.getGeneratedBoard()) {
-    newBoard = boardEventHandler.getGeneratedBoard();
-    boardEventHandler.setGeneratedBoard(null);
-  } else {
-    newBoard = ui.getNewBoard(currentBoard);
-  }
-  boards.push(newBoard);
-  localStorageManager.saveBoards(boards);
-  boards.splice(0, boards.length, ...localStorageManager.getBoards());
-
-  ui.hideButtons('addBoard');
-  ui.showButtons('main');
-
-  ui.addSelectOption(boards.length - 1);
-
-  console.log(boards);
-  currentBoard = boards[boards.length - 1];
-  const dominoGrid = copyDominoGrid(currentBoard);
-  boardEventHandler.setCurrentBoard(dominoGrid);
-  ui.clearBoard(dominoGrid);
-  ui.displayBoard(dominoGrid);
-  ui.switchSelectedBoard(`${boards.length - 1}`);
 });
 
 finishSolvingBtn.addEventListener('click', () => {
@@ -175,7 +139,10 @@ ui.boardSelect.select.addEventListener('change', (e) => {
 solveAIBtn.addEventListener('click', () => {
   ui.showMessage('AI is currently working on the problem...');
   setTimeout(() => {
-    const solutions = copyDominoGrid(currentBoard).findSolution();
+    console.log('current', boardEventHandler.getCurrentBoard());
+    const solutions = copyDominoGrid(
+      boardEventHandler.getCurrentBoard()
+    ).findSolution();
     console.log(solutions);
 
     try {

@@ -13,6 +13,7 @@ export default class BoardEventHandler {
     this.generateBtn = document.getElementById('generate');
     this.addBoardExitBtn = document.getElementById('add-board-exit');
     this.removeBoardBtn = document.getElementById('remove-current-board');
+    this.addBoardBtn = document.getElementById('add-board');
   }
 
   init() {
@@ -20,11 +21,13 @@ export default class BoardEventHandler {
     this.handleGenerateBoard = this.handleGenerateBoard.bind(this);
     this.handleAddBoardExit = this.handleAddBoardExit.bind(this);
     this.handleRemoveBoard = this.handleRemoveBoard.bind(this);
+    this.handleAddBoard = this.handleAddBoard.bind(this);
 
     this.clearBoardBtn.addEventListener('click', this.handleClearBoard);
     this.generateBtn.addEventListener('click', this.handleGenerateBoard);
     this.addBoardExitBtn.addEventListener('click', this.handleAddBoardExit);
     this.removeBoardBtn.addEventListener('click', this.handleRemoveBoard);
+    this.addBoardBtn.addEventListener('click', this.handleAddBoard);
   }
 
   handleClearBoard() {
@@ -84,6 +87,43 @@ export default class BoardEventHandler {
     this.setCurrentBoard(dominoGrid);
     this.ui.clearBoard(dominoGrid);
     this.ui.displayBoard(dominoGrid);
+  }
+
+  handleAddBoard() {
+    console.log(this.boards);
+    let newBoard;
+
+    if (this.getGeneratedBoard()) {
+      console.log('generated board');
+      newBoard = this.getGeneratedBoard();
+      this.setGeneratedBoard(null);
+    } else {
+      newBoard = this.ui.getNewBoard(this.currentBoard);
+    }
+    this.boards.push(newBoard);
+    this.localStorageManager.saveBoards(this.boards);
+    this.boards.splice(
+      0,
+      this.boards.length,
+      ...this.localStorageManager.getBoards()
+    );
+
+    this.ui.hideButtons('addBoard');
+    this.ui.showButtons('main');
+
+    this.ui.addSelectOption(this.boards.length - 1);
+
+    console.log(this.boards);
+    this.currentBoard = this.boards[this.boards.length - 1];
+    const dominoGrid = copyDominoGrid(this.currentBoard);
+    this.setCurrentBoard(dominoGrid);
+    this.ui.clearBoard(dominoGrid);
+    this.ui.displayBoard(dominoGrid);
+    this.ui.switchSelectedBoard(`${this.boards.length - 1}`);
+  }
+
+  getCurrentBoard() {
+    return this.currentBoard;
   }
 
   setCurrentBoard(newBoard) {
