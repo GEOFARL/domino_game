@@ -4,7 +4,6 @@ import './styles.css';
 import initialBoards from './initialBoards';
 import UI from './UI';
 import Section from './Section';
-import DominoGrid from './DominoGrid';
 import copyDominoGrid from './copyFunc';
 import { startConfetti, stopConfetti } from './confetti';
 import { convertToSimple } from './conversionFunc';
@@ -18,7 +17,6 @@ import BoardEventHandler from './BoardEventHandlers';
 let boards;
 let currentBoard;
 let solveYourselfBoard;
-let generatedBoard = null;
 const STORE_KEY = 'SAVED_BOARDS';
 
 const localStorageManager = new LocalStorageManager(STORE_KEY);
@@ -58,11 +56,10 @@ const ui = new UI(
 );
 ui.displayBoard(currentBoard);
 
-const boardEventHandler = new BoardEventHandler(ui, currentBoard);
+const boardEventHandler = new BoardEventHandler(ui, currentBoard, boards);
 boardEventHandler.init();
 
 const addBoardBtn = document.getElementById('add-board');
-const addBoardExitBtn = document.getElementById('add-board-exit');
 const finishSolvingBtn = document.getElementById('finish-solving');
 const solveBoardExitBtn = document.getElementById('solve-board-exit');
 const enterNewBoardBtn = document.getElementById('enter-new-board');
@@ -71,23 +68,6 @@ const solveYourselfBtn = document.getElementById('solve-yourself');
 const removeBoardBtn = document.getElementById('remove-current-board');
 const closeModalBtn = document.querySelector('.modal__header svg');
 const closeModalInfoBtn = document.querySelector('.modal__info svg');
-const generateBtn = document.getElementById('generate');
-
-generateBtn.addEventListener('click', () => {
-  ui.showMessage('Generating a board...');
-
-  setTimeout(() => {
-    generatedBoard = new DominoGrid(9);
-    ui.hideButtons('main');
-    ui.showButtons('addBoard');
-    const dominoGrid = copyDominoGrid(generatedBoard);
-    boardEventHandler.updateBoard(dominoGrid);
-    ui.clearBoard(dominoGrid);
-    ui.displayBoard(dominoGrid);
-
-    ui.hideMessage();
-  }, 100);
-});
 
 closeModalBtn.addEventListener('click', () => {
   ui.hideModal('error');
@@ -95,23 +75,6 @@ closeModalBtn.addEventListener('click', () => {
 
 closeModalInfoBtn.addEventListener('click', () => {
   ui.hideModal('info');
-});
-
-addBoardExitBtn.addEventListener('click', () => {
-  ui.hideButtons('addBoard');
-  ui.showButtons('main');
-
-  if (generatedBoard) {
-    generatedBoard = null;
-    const dominoGrid = copyDominoGrid(boards[0]);
-    ui.clearBoard(dominoGrid);
-    ui.displayBoard(dominoGrid);
-    return;
-  }
-
-  const dominoGrid = copyDominoGrid(currentBoard);
-  ui.clearBoard(dominoGrid);
-  ui.displayBoard(dominoGrid);
 });
 
 solveBoardExitBtn.addEventListener('click', () => {
@@ -127,9 +90,10 @@ solveBoardExitBtn.addEventListener('click', () => {
 addBoardBtn.addEventListener('click', () => {
   console.log(boards);
   let newBoard;
-  if (generatedBoard) {
-    newBoard = generatedBoard;
-    generatedBoard = null;
+
+  if (boardEventHandler.getGeneratedBoard()) {
+    newBoard = boardEventHandler.getGeneratedBoard();
+    boardEventHandler.setGeneratedBoard(null);
   } else {
     newBoard = ui.getNewBoard(currentBoard);
   }
@@ -145,7 +109,7 @@ addBoardBtn.addEventListener('click', () => {
   console.log(boards);
   currentBoard = boards[boards.length - 1];
   const dominoGrid = copyDominoGrid(currentBoard);
-  boardEventHandler.updateBoard(dominoGrid);
+  boardEventHandler.setCurrentBoard(dominoGrid);
   ui.clearBoard(dominoGrid);
   ui.displayBoard(dominoGrid);
   ui.switchSelectedBoard(`${boards.length - 1}`);
@@ -161,7 +125,6 @@ finishSolvingBtn.addEventListener('click', () => {
     startConfetti();
     stopConfetti();
     setTimeout(() => UI.enableAllButtons(), 7000);
-    // setTimeout(() => clearBoardBtn.classList.remove('hide'), 1000);
     setTimeout(() => ui.showButtons('clearBoard'), 1000);
     if (window.dominoAPI) {
       window.dominoAPI.saveSolution(
@@ -170,7 +133,6 @@ finishSolvingBtn.addEventListener('click', () => {
     }
   } else {
     ui.showMessage('Your solution is incorrect');
-    // clearBoardBtn.classList.remove('hide');
     ui.showButtons('clearBoard');
     setTimeout(() => {
       ui.hideMessage();
@@ -190,7 +152,7 @@ removeBoardBtn.addEventListener('click', () => {
   currentBoard = boards[boards.length - 1];
   ui.switchSelectedBoard(boards.length - 1);
   const dominoGrid = copyDominoGrid(currentBoard);
-  boardEventHandler.updateBoard(dominoGrid);
+  boardEventHandler.setCurrentBoard(dominoGrid);
   ui.clearBoard(dominoGrid);
   ui.displayBoard(dominoGrid);
 });
@@ -214,10 +176,9 @@ ui.boardSelect.select.addEventListener('change', (e) => {
   currentBoard = boards[e.target.value];
   console.log(currentBoard);
   const dominoGrid = copyDominoGrid(currentBoard);
-  boardEventHandler.updateBoard(dominoGrid);
+  boardEventHandler.setCurrentBoard(dominoGrid);
   ui.clearBoard(dominoGrid);
   ui.displayBoard(dominoGrid);
-  // clearBoardBtn.classList.add('hide');
   ui.hideButtons('clearBoard');
 });
 
@@ -236,7 +197,6 @@ solveAIBtn.addEventListener('click', () => {
         startConfetti();
         stopConfetti();
         setTimeout(() => UI.enableAllButtons(), 7000);
-        // setTimeout(() => clearBoardBtn.classList.remove('hide'), 1000);
         setTimeout(() => ui.showButtons('clearBoard'), 1000);
 
         if (window.dominoAPI) {
