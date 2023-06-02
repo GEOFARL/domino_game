@@ -142,7 +142,21 @@ export default class DominoGrid {
     if (!this.isOnBoard(row, col)) {
       return false;
     }
-    return this.board[row][col] === 0;
+    if (this.board[row][col] === 0) {
+      for (let r = row - 1; r <= row + 1; r += 1) {
+        for (let c = col - 1; c <= col + 1; c += 1) {
+          if (this.isOnBoard(r, c)) {
+            if (this.board[r][c] instanceof CellValue) {
+              if (this.board[r][c].done) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
   findDirections(row, col) {
@@ -410,6 +424,7 @@ export default class DominoGrid {
         console.log(
           `Current position: ${currPos}, Current Directions: ${directions}`
         );
+        console.log(copyDominoGrid(dominoGrid));
         for (let i = 0; i < dominoGrid.availableDominos.length; i += 1) {
           const currInitialDomino = copyDomino(dominoGrid.availableDominos[i]);
           const currDomino = dominoGrid.availableDominos[i];

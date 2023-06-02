@@ -1,4 +1,4 @@
-import Domino from '../../Domino';
+import Domino from '../../../src/gameLogic/Domino';
 
 describe('Domino', () => {
   test('should have a and b properties', () => {

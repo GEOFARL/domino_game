@@ -1,5 +1,5 @@
-import DominoGrid from '../../DominoGrid';
-import Domino from '../../Domino';
+import DominoGrid from '../../../src/gameLogic/DominoGrid';
+import Domino from '../../../src/gameLogic/Domino';
 
 describe('DominoGrid', () => {
   describe('isOnBoard', () => {

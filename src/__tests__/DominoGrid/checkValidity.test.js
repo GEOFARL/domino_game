@@ -1,6 +1,6 @@
-import CellValue from '../../CellValue';
-import Domino from '../../Domino';
-import DominoGrid from '../../DominoGrid';
+import CellValue from '../../../src/gameLogic/CellValue';
+import Domino from '../../../src/gameLogic/Domino';
+import DominoGrid from '../../../src/gameLogic/DominoGrid';
 
 describe('CellValue', () => {
   describe('checkValidity', () => {

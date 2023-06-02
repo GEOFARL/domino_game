@@ -8,6 +8,7 @@ export default class BoardEventHandler {
     this.generatedBoard = null;
     this.boards = boards;
     this.localStorageManager = localStorageManager;
+    this.currentBoardIndex = 0;
 
     this.clearBoardBtn = document.getElementById('clear-board');
     this.generateBtn = document.getElementById('generate');
@@ -43,6 +44,7 @@ export default class BoardEventHandler {
   }
 
   handleGenerateBoard() {
+    this.ui.hideButtons('clearBoard');
     this.ui.showMessage('Generating a board...');
 
     setTimeout(() => {
@@ -76,8 +78,9 @@ export default class BoardEventHandler {
   }
 
   handleRemoveBoard() {
-    const index = this.boards.findIndex((val) => val === this.currentBoard);
-    this.boards.splice(index, 1);
+    this.ui.hideButtons('clearBoard');
+    if (this.boards.length <= 1) return;
+    this.boards.splice(this.currentBoardIndex, 1);
     this.ui.removeBoardOption(this.boards);
     this.localStorageManager.saveBoards(this.boards);
     this.boards.splice(
@@ -85,9 +88,9 @@ export default class BoardEventHandler {
       this.boards.length,
       ...this.localStorageManager.getBoards()
     );
-    // this.boards = this.localStorageManager.getBoards();
-    this.currentBoard = this.boards[this.boards.length - 1];
-    this.ui.switchSelectedBoard(this.boards.length - 1);
+    this.currentBoardIndex = this.boards.length - 1;
+    this.currentBoard = this.boards[this.currentBoardIndex];
+    this.ui.switchSelectedBoard(this.currentBoardIndex);
     const dominoGrid = copyDominoGrid(this.currentBoard);
     this.setCurrentBoard(dominoGrid);
     this.ui.clearBoard(dominoGrid);
@@ -95,11 +98,9 @@ export default class BoardEventHandler {
   }
 
   handleAddBoard() {
-    console.log(this.boards);
     let newBoard;
 
     if (this.getGeneratedBoard()) {
-      console.log('generated board');
       newBoard = this.getGeneratedBoard();
       this.setGeneratedBoard(null);
     } else {
@@ -118,8 +119,8 @@ export default class BoardEventHandler {
 
     this.ui.addSelectOption(this.boards.length - 1);
 
-    console.log(this.boards);
-    this.currentBoard = this.boards[this.boards.length - 1];
+    this.currentBoardIndex = this.boards.length - 1;
+    this.currentBoard = this.boards[this.currentBoardIndex];
     const dominoGrid = copyDominoGrid(this.currentBoard);
     this.setCurrentBoard(dominoGrid);
     this.ui.clearBoard(dominoGrid);
@@ -128,6 +129,7 @@ export default class BoardEventHandler {
   }
 
   handleEnterNewBoard() {
+    this.ui.hideButtons('clearBoard');
     this.ui.hideButtons('main');
     this.ui.addNewBoard(this.currentBoard);
     this.ui.showButtons('addBoard');
@@ -147,5 +149,9 @@ export default class BoardEventHandler {
 
   setGeneratedBoard(board) {
     this.generatedBoard = board;
+  }
+
+  setCurrentBoardIndex(index) {
+    this.currentBoardIndex = index;
   }
 }

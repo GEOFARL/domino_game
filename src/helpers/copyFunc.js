@@ -8,12 +8,14 @@ export default function copyDominoGrid(dominoGrid) {
     .fill(0)
     .map(() => Array(dominoGrid.size).fill(0));
 
+  const newCellValues = [];
   for (let r = 0; r < dominoGrid.size; r += 1) {
     for (let c = 0; c < dominoGrid.size; c += 1) {
       if (dominoGrid.board[r][c] instanceof Domino) {
         newBoard[r][c] = copyDomino(dominoGrid.board[r][c]);
       } else if (dominoGrid.board[r][c] instanceof CellValue) {
         newBoard[r][c] = copyCellValue(dominoGrid.board[r][c], newDominoGrid);
+        newCellValues.push(newBoard[r][c]);
       } else {
         newBoard[r][c] = dominoGrid.board[r][c];
       }
@@ -23,11 +25,6 @@ export default function copyDominoGrid(dominoGrid) {
   const newAvailableDominos = [];
   dominoGrid.availableDominos.forEach((domino) => {
     newAvailableDominos.push(copyDomino(domino));
-  });
-
-  const newCellValues = [];
-  dominoGrid.cellValues.forEach((value) => {
-    newCellValues.push(copyCellValue(value, newDominoGrid));
   });
 
   newDominoGrid.board = newBoard;

@@ -1,5 +1,5 @@
-import CellValue from '../../CellValue';
-import DominoGrid from '../../DominoGrid';
+import CellValue from '../../../src/gameLogic/CellValue';
+import DominoGrid from '../../../src/gameLogic/DominoGrid';
 
 describe('CellValue', () => {
   describe('findEmptyAdjCells', () => {

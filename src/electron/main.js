@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 
 const isMac = process.platform === 'darwin';
-// const isDev = require('electron-is-dev');
-const isDev = true;
+const isDev = require('electron-is-dev');
+// const isDev = true;
 
 let mainWindow;
 
@@ -23,7 +23,6 @@ function createWindow() {
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
-
   mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
 }
 
@@ -48,7 +47,18 @@ const template = [
   // { role: 'fileMenu' }
   {
     label: 'File',
-    submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
+    submenu: [
+      isMac ? { role: 'close' } : { role: 'quit' },
+      {
+        label: 'New Window',
+        click: createWindow,
+        accelerator: process.platform === 'darwin' ? 'Cmd+N' : 'Ctrl+N',
+      },
+      {
+        label: 'Reset boards',
+        click: removeBoards,
+      },
+    ],
   },
   // { role: 'viewMenu' },
   {
@@ -90,6 +100,14 @@ function getTime() {
   const offset = date.getTimezoneOffset();
   date = new Date(date.getTime() - offset * 60 * 1000);
   return date.toISOString().split('T').join('_');
+}
+
+function removeBoards() {
+  const window = BrowserWindow.getFocusedWindow();
+  window.webContents.executeJavaScript(
+    "localStorage.removeItem('SAVED_BOARDS');"
+  );
+  BrowserWindow.getFocusedWindow().reload();
 }
 
 async function saveFile(board) {

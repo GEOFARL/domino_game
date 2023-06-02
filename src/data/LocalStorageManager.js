@@ -17,6 +17,13 @@ export default class LocalStorageManager {
   }
 
   existBoards() {
-    return localStorage.getItem(this.storeKey);
+    return (
+      localStorage.getItem(this.storeKey) !== null &&
+      localStorage.getItem(this.storeKey).length !== 0
+    );
+  }
+
+  removeBoards() {
+    localStorage.removeItem(this.storeKey);
   }
 }

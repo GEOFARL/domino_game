@@ -1,4 +1,4 @@
-import DominoGrid from '../../DominoGrid';
+import DominoGrid from '../../../src/gameLogic/DominoGrid';
 
 describe('DominoGrid', () => {
   describe('generateDominoes', () => {

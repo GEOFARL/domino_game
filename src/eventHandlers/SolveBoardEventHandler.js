@@ -59,9 +59,7 @@ export default class SolveBoardEventHandler {
   handleSolveBoardExit() {
     this.ui.hideButtons('solveBoard');
     this.ui.showButtons('main');
-    console.log(this.currentBoard);
     const dominoGrid = copyDominoGrid(this.currentBoard);
-    console.log(this.ui.dominoGrid);
     this.ui.clearBoard(dominoGrid);
     this.ui.displayBoard(dominoGrid);
   }
@@ -69,11 +67,9 @@ export default class SolveBoardEventHandler {
   handleSolveAI() {
     this.ui.showMessage('AI is currently working on the problem...');
     setTimeout(() => {
-      console.log('current', this.boardEventHandler.getCurrentBoard());
       const solutions = copyDominoGrid(
         this.boardEventHandler.getCurrentBoard()
       ).findSolution();
-      console.log(solutions);
 
       try {
         const dominoGrid = copyDominoGrid(solutions[0]);
@@ -91,7 +87,6 @@ export default class SolveBoardEventHandler {
           }
         }
       } catch (err) {
-        console.log(err);
         this.ui.showModal('error');
       }
       this.ui.hideMessage();
@@ -100,6 +95,7 @@ export default class SolveBoardEventHandler {
 
   handleSolveYourself() {
     this.ui.hideButtons('main');
+    this.ui.hideButtons('clearBoard');
     this.solveYourselfBoard = copyDominoGrid(this.currentBoard);
     this.ui.solveYourself(this.solveYourselfBoard);
     this.ui.showButtons('solveBoard');

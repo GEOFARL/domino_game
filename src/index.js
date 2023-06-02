@@ -26,7 +26,8 @@ if (localStorageManager.existBoards()) {
   [currentBoard] = boards;
 } else {
   localStorageManager.saveBoards(initialBoards);
-  [currentBoard] = initialBoards;
+  boards = localStorageManager.getBoards(initialBoards);
+  [currentBoard] = boards;
 }
 
 const themeManager = new ThemeManager();
@@ -54,6 +55,9 @@ const ui = new UI(
   modalError,
   modalInfo
 );
+console.log(initialBoards);
+console.log(boards);
+console.log(currentBoard);
 ui.displayBoard(currentBoard);
 
 const boardEventHandler = new BoardEventHandler(
@@ -75,6 +79,7 @@ solveBoardEventHandler.init();
 
 ui.boardSelect.element.addEventListener('change', (e) => {
   currentBoard = boards[e.target.value];
+  boardEventHandler.setCurrentBoardIndex(e.target.value);
   const dominoGrid = copyDominoGrid(currentBoard);
   boardEventHandler.setCurrentBoard(dominoGrid);
   solveBoardEventHandler.setCurrentBoard(dominoGrid);
