@@ -34,8 +34,25 @@ export const convertOutOfSimple = (boards) => {
     const newBoard = board;
     for (let r = 0; r < board.length; r += 1) {
       for (let c = 0; c < board.length; c += 1) {
-        if (board[r][c] !== 0) {
-          newBoard[r][c] = new CellValue(board[r][c], r, c);
+        if (board[r][c] !== 0 && !(board[r][c] instanceof Domino)) {
+          if (typeof board[r][c] === 'string') {
+            DominoGrid.offsets.forEach((offset) => {
+              const [dx, dy] = offset;
+              if (
+                new DominoGrid(
+                  board.length,
+                  [...Array(9)].map(() => [...Array(9)])
+                ).isOnBoard(r + dx, c + dy) &&
+                typeof board[r + dx][c + dy] === 'string'
+              ) {
+                const domino = new Domino(board[r][c], board[r + dx][c + dy]);
+                board[r][c] = domino;
+                board[r + dx][c + dy] = domino;
+              }
+            });
+          } else {
+            newBoard[r][c] = new CellValue(board[r][c], r, c);
+          }
         }
       }
     }

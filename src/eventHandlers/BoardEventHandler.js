@@ -1,4 +1,5 @@
 import DominoGrid from '../gameLogic/DominoGrid';
+import { convertOutOfSimple } from '../helpers/conversionFunc';
 import copyDominoGrid from '../helpers/copyFunc';
 
 export default class BoardEventHandler {
@@ -15,6 +16,7 @@ export default class BoardEventHandler {
     this.removeBoardBtn = document.getElementById('remove-current-board');
     this.addBoardBtn = document.getElementById('add-board');
     this.enterNewBoardBtn = document.getElementById('enter-new-board');
+    this.loadNewBoardForm = document.querySelector('.load-board-section');
   }
 
   init() {
@@ -24,6 +26,7 @@ export default class BoardEventHandler {
     this.handleRemoveBoard = this.handleRemoveBoard.bind(this);
     this.handleAddBoard = this.handleAddBoard.bind(this);
     this.handleEnterNewBoard = this.handleEnterNewBoard.bind(this);
+    this.handleLoadNewBoard = this.handleLoadNewBoard.bind(this);
 
     this.clearBoardBtn.addEventListener('click', this.handleClearBoard);
     this.generateBtn.addEventListener('click', this.handleGenerateBoard);
@@ -31,8 +34,32 @@ export default class BoardEventHandler {
     this.removeBoardBtn.addEventListener('click', this.handleRemoveBoard);
     this.addBoardBtn.addEventListener('click', this.handleAddBoard);
     this.enterNewBoardBtn.addEventListener('click', this.handleEnterNewBoard);
+    this.loadNewBoardForm.addEventListener('submit', this.handleLoadNewBoard);
 
     this.boards.forEach((board, index) => this.ui.addSelectOption(index));
+  }
+
+  async handleLoadNewBoard(e) {
+    e.preventDefault();
+    const inputEl = this.loadNewBoardForm.querySelector('input');
+    const messageEl = this.loadNewBoardForm.querySelector(
+      '.message-load-board'
+    );
+    messageEl.classList.add('hide');
+    const enteredValue = inputEl.value;
+    if (enteredValue.trim().length > 0) {
+      const board = await window.dominoAPI.getBoard(enteredValue);
+      if (board === 'Cannot open this file') {
+        messageEl.innerHTML = board;
+        messageEl.classList.remove('hide');
+      } else {
+        const [dominoGrid] = convertOutOfSimple([board]);
+        this.ui.clearBoard(dominoGrid);
+        this.ui.displayBoard(dominoGrid);
+        this.ui.showButtons('clearBoard');
+      }
+      inputEl.value = '';
+    }
   }
 
   handleClearBoard() {

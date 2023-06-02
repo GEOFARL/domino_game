@@ -5,4 +5,5 @@ contextBridge.exposeInMainWorld('dominoAPI', {
     console.log('sent');
     ipcRenderer.send('solution:save', board);
   },
+  getBoard: (filename) => ipcRenderer.invoke('board:get', filename),
 });
